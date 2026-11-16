@@ -1,0 +1,48 @@
+.card {
+  display: flex;
+  flex-direction: column;
+}
+
+.image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  margin-bottom: 12px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.name {
+  width: 80%;
+  height: 20px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.price {
+  width: 40%;
+  height: 20px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+:global(.dark) .image,
+:global(.dark) .name,
+:global(.dark) .price {
+  background-color: var(--color-gray-800);
+}
+

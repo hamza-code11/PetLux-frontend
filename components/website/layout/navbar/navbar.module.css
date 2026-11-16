@@ -1,0 +1,380 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+  transition: box-shadow 0.25s ease;
+}
+
+.scrolled {
+  box-shadow: var(--shadow-md);
+}
+
+/* ---------- Main nav ---------- */
+
+.nav {
+  max-width: 1440px;
+  min-height: 76px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+
+.logoImage {
+  object-fit: contain;
+  width: auto;
+  height: 60px;
+}
+
+/* :global(.dark) .logoImage {
+  filter: invert(1) brightness(2); 
+} */
+
+.menu {
+  height: 76px;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  list-style: none;
+}
+
+.menuItem {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.menuLink {
+  position: relative;
+  height: 100%;
+  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-black);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  text-decoration: none;
+  white-space: nowrap;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.menuLink::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 0;
+  height: 2px;
+  background: var(--color-black);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.menuLink:hover::after,
+.menuLinkActive::after,
+.menuLinkCurrent::after,
+.menuLink:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.chevron {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.menuLinkActive .chevron {
+  transform: rotate(180deg);
+}
+
+/* ---------- Actions (Search / Account / Cart) ---------- */
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.iconButton {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-black);
+  background: none;
+  border: 0;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.iconButton:hover,
+.iconButtonActive {
+  background: var(--color-gray-100);
+}
+
+.badge {
+  position: absolute;
+  top: 2px;
+  right: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-black);
+  color: var(--color-white);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: var(--font-bold);
+  line-height: 1;
+  border-radius: var(--radius-full);
+  pointer-events: none;
+}
+
+.burger {
+  display: none;
+}
+
+/* ---------- Mega menu ---------- */
+
+.mega {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: calc(100vh - 90px);
+  overflow-y: auto;
+  background: var(--color-white);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  animation: megaIn 0.18s ease;
+}
+
+@keyframes megaIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.megaInner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 56px;
+}
+
+.megaColumns {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 32px 40px;
+  align-content: start;
+}
+
+.megaColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.colTitle {
+  width: fit-content;
+  padding-bottom: 8px;
+  color: var(--color-black);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.colTitle:hover {
+  border-bottom-color: var(--color-black);
+}
+
+.subList {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  list-style: none;
+}
+
+.subLink {
+  display: inline-block;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.subLink:hover {
+  transform: translateX(4px);
+  color: var(--color-black);
+}
+
+.promo {
+  min-height: 220px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 6px;
+  background: var(--color-black);
+  color: var(--color-white);
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  transition: transform 0.25s ease;
+}
+
+.promo:hover {
+  transform: translateY(-3px);
+}
+
+.promoLabel {
+  color: var(--color-gray-300);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.promoTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-4xl);
+  font-weight: var(--font-bold);
+}
+
+.promoCta {
+  margin-top: 8px;
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1280px) {
+  .nav {
+    padding: 0 24px;
+    gap: 20px;
+  }
+
+  .menuLink {
+    padding: 0 10px;
+  }
+
+  .menuLink::after {
+    left: 10px;
+    right: 10px;
+  }
+
+  .megaInner {
+    padding: 32px 24px;
+    grid-template-columns: 1fr 240px;
+    gap: 32px;
+  }
+}
+
+/* Tablet + Mobile: burger + sidebar */
+@media (max-width: 1024px) {
+  .menu {
+    display: none;
+  }
+
+  .burger {
+    display: inline-flex;
+  }
+
+  .nav {
+    min-height: 66px;
+    padding: 0 12px;
+    gap: 4px;
+    justify-content: flex-start;
+  }
+
+  .logo {
+    margin-left: 4px;
+    font-size: var(--text-2xl);
+  }
+
+  .actions {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    min-height: 60px;
+    padding: 0 8px;
+  }
+
+  .iconButton {
+    width: 38px;
+    height: 38px;
+  }
+
+  .iconButton svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .actions {
+    gap: 0;
+  }
+
+  .badge {
+    top: 1px;
+    right: -1px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 360px) {
+  .logo {
+    font-size: var(--text-xl);
+  }
+
+  .iconButton {
+    width: 34px;
+    height: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mega {
+    animation: none;
+  }
+}

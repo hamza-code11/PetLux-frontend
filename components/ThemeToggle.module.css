@@ -1,0 +1,89 @@
+.toggleSwitch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 50px; /* Size chota kiya */
+  height: 26px; /* Size chota kiya */
+  padding: 2px;
+  background-color: rgba(255, 255, 255, 0.1); /* Dark bg */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggleSwitch:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ---------- Icons ---------- */
+.iconWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 6px; /* Padding kam ki */
+  pointer-events: none;
+}
+
+.sunIcon {
+  color: #FFD60A; /* Hardcoded yellow */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.moonIcon {
+  color: #A3A3A3; /* Hardcoded gray */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Hide/Show icons based on theme */
+.toggleSwitch .sunIcon {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.toggleSwitch .moonIcon {
+  opacity: 0.4;
+  transform: rotate(-90deg);
+}
+
+.toggleSwitch.dark .sunIcon {
+  opacity: 0.4;
+  transform: rotate(90deg);
+}
+
+.toggleSwitch.dark .moonIcon {
+  opacity: 1;
+  transform: rotate(0deg);
+  color: #FFFFFF; /* Hardcoded white */
+}
+
+/* ---------- Slider Circle ---------- */
+.slider {
+  position: absolute;
+  left: 2px;
+  width: 20px; /* Circle chota kiya */
+  height: 20px; /* Circle chota kiya */
+  background-color: #FFFFFF; /* Hardcoded white */
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+}
+
+/* Move slider circle in dark mode */
+.toggleSwitch.dark .slider {
+  transform: translateX(24px); /* Translate adjust kiya */
+  background-color: #FFFFFF; /* Circle white hi rahega */
+}
+
+/* ---------- Focus Ring ---------- */
+.toggleSwitch:focus-visible {
+  outline: 2px solid #FFD60A;
+  outline-offset: 2px;
+}

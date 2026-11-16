@@ -1,0 +1,137 @@
+.section {
+  width: 100%;
+  background-color: var(--color-surface);
+  padding: clamp(60px, 8vw, 100px) 0;
+}
+
+.inner {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 56px);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: clamp(40px, 5vw, 64px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.title {
+  margin: 0;
+  color: var(--color-foreground);
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 1.2rem + 2vw, 2.75rem);
+  font-weight: var(--font-regular);
+  letter-spacing: 0.02em;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+}
+
+/* ---------- Bento Grid Layout ---------- */
+.bentoGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr; /* Pehli image thodi badi */
+  grid-template-rows: 240px 240px;
+  gap: 20px;
+}
+
+.card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-gray-100);
+  text-decoration: none;
+  display: block;
+  /* Focus ring for accessibility */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Badi Image ko 2 rows mein phaila diya */
+.mainCard {
+  grid-row: span 2;
+}
+
+/* Hover Effect */
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card:focus-visible {
+  outline: 3px solid var(--color-yellow);
+  outline-offset: 4px;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+/* Overlay (Text ko readable banane ke liye) */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0) 50%
+  );
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+  transition: background 0.3s ease;
+}
+
+.name {
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem);
+  font-weight: var(--font-medium);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Responsive ---------- */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .bentoGrid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 220px 220px;
+  }
+  
+  .mainCard {
+    grid-row: span 1; /* Tablet pe badi image normal ho jayegi */
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .bentoGrid {
+    grid-template-columns: 1fr; /* Mobile pe single column */
+    grid-template-rows: repeat(5, 200px); /* Sabhi images 200px height */
+    gap: 16px;
+  }
+  
+  .overlay {
+    padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .image {
+    transition: none;
+  }
+}
+

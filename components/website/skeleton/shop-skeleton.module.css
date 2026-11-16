@@ -1,0 +1,55 @@
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px clamp(16px, 4vw, 56px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.textPlaceholder {
+  height: 20px;
+  width: 80%;
+  background-color: var(--color-gray-200);
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.pricePlaceholder {
+  height: 16px;
+  width: 40%;
+  background-color: var(--color-gray-200);
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+@media (max-width: 1024px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+}
+

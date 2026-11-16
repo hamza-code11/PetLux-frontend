@@ -1,0 +1,25 @@
+.header {
+  width: 100%;
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  margin-bottom: 40px;
+}
+
+.inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 40px clamp(16px, 4vw, 56px) 24px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
+  color: var(--color-foreground);
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  color: var(--color-muted);
+  font-size: var(--text-base);
+  margin: 0;
+}

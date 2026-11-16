@@ -1,0 +1,90 @@
+.topBar {
+  width: 100%;
+  /* Top bar hamesha dark rahega, isliye fixed color use kiya */
+  background: #111111; 
+  color: #FFFFFF;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.inner {
+  max-width: 1440px;
+  min-height: 40px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #FFFFFF;
+  font-size: var(--text-xs);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+}
+
+.item:hover {
+  opacity: 1;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------- Theme Toggle Specific Styles ---------- */
+
+.themeToggleWrapper {
+  display: flex;
+  align-items: center;
+  margin-right: 8px; 
+}
+
+/* Toggle button ko top bar ke hisaab se white adjust karna */
+.themeToggleWrapper :global(.toggleBtn) {
+  width: 28px;
+  height: 28px;
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #FFFFFF;
+  background-color: transparent;
+}
+
+/* Hover effect top bar ke liye */
+.themeToggleWrapper :global(.toggleBtn):hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: #FFFFFF;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 1024px) {
+  .inner {
+    padding: 0 24px;
+  }
+}
+
+@media (max-width: 640px) {
+  .inner {
+    min-height: 36px;
+    padding: 0 12px;
+  }
+
+  .group {
+    gap: 16px;
+  }
+
+  /* Chhoti screen par sirf number dikhe */
+  .emailItem {
+    display: none;
+  }
+}

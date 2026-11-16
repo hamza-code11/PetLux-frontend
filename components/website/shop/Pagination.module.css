@@ -1,0 +1,105 @@
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+}
+
+/* Common Button Styles */
+.navBtn,
+.pageBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Prev / Next Buttons */
+.navBtn {
+  gap: 6px;
+  padding: 0 16px;
+}
+
+.navBtn:hover:not(:disabled) {
+  background: var(--color-surface);
+  border-color: var(--color-gray-400);
+}
+
+.navBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--color-surface);
+}
+
+/* Page Numbers Container */
+.pages {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Individual Page Button */
+.pageBtn {
+  width: 40px;
+  padding: 0;
+}
+
+.pageBtn:hover:not(.active) {
+  background: var(--color-surface);
+  border-color: var(--color-gray-400);
+}
+
+/* Active Page */
+.pageBtn.active {
+  background: var(--color-foreground);
+  color: var(--color-background);
+  border-color: var(--color-foreground);
+  font-weight: var(--font-bold);
+}
+
+/* Dots (...) */
+.dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 40px;
+  color: var(--color-muted);
+  letter-spacing: 2px;
+}
+
+/* Focus Ring */
+.navBtn:focus-visible,
+.pageBtn:focus-visible {
+  outline: 2px solid var(--color-yellow);
+  outline-offset: 2px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 640px) {
+  /* Mobile par Prev/Next ka text hide karke sirf icon dikhayenge */
+  .hideMobile {
+    display: none;
+  }
+  
+  .navBtn {
+    padding: 0 12px;
+  }
+
+  .pageBtn {
+    width: 36px;
+  }
+}
+

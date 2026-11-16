@@ -1,0 +1,27 @@
+.page {
+  background-color: var(--color-background);
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+
+.layout {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 56px);
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: clamp(32px, 5vw, 64px);
+  align-items: start;
+}
+
+.main {
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
