@@ -1,0 +1,211 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 90;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.overlayOpen {
+  opacity: 1;
+  visibility: visible;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 240px;
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+}
+
+@media (min-width: 1025px) {
+  .sidebar {
+    transform: translateX(0);
+  }
+}
+
+.sidebarOpen {
+  transform: translateX(0);
+}
+
+/* Logo Area */
+.logoWrapper {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--spacing-4);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.logoImage {
+  object-fit: contain;
+  width: auto;
+  height: 50px; 
+}
+
+/* Nav Container */
+.nav {
+  padding: var(--spacing-4) var(--spacing-3) var(--spacing-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+}
+
+/* Section Titles */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.sectionTitle {
+  font-size: 11px;
+  font-weight: var(--font-bold);
+  color: var(--color-muted);
+  letter-spacing: 0.05em;
+  padding: 0 var(--spacing-3);
+  margin-bottom: var(--spacing-2);
+}
+
+/* Accordion Menu Button */
+.menuGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.menuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-3);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-gray-700); /* Gray 700 use kiya */
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.menuBtnLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  white-space: nowrap;
+}
+
+.menuBtn:hover {
+  background: var(--color-gray-100); /* Gray 100 hover */
+  color: var(--color-gray-900); /* Gray 900 text */
+}
+
+/* Active state ab gray use karta hai */
+.menuBtnActive {
+  color: var(--color-gray-900); /* Gray 900 for active text */
+  font-weight: var(--font-semibold);
+}
+
+/* Sub Menu (Dropdown) */
+.subMenu {
+  display: none;
+  flex-direction: column;
+  padding-left: var(--spacing-10);
+  margin-top: var(--spacing-1);
+  gap: var(--spacing-1);
+}
+
+.subMenuOpen {
+  display: flex;
+}
+
+.subLink {
+  padding: var(--spacing-2) var(--spacing-3);
+  color: var(--color-gray-500); /* Gray 500 */
+  font-size: var(--text-sm);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.subLink:hover {
+  color: var(--color-gray-900); /* Gray 900 hover */
+  background: var(--color-gray-100); /* Gray 100 background */
+}
+
+/* Active Sub-link */
+.subLinkActive {
+  background: var(--color-gray-200); /* Gray 200 background */
+  color: var(--color-gray-900); /* Gray 900 text */
+  font-weight: var(--font-semibold);
+}
+
+/* Regular Links */
+.link {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+  padding: var(--spacing-2) var(--spacing-3);
+  color: var(--color-gray-500); /* Gray 500 */
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.link:hover {
+  background: var(--color-gray-100);
+  color: var(--color-gray-900);
+}
+
+.link .chevronRight {
+  margin-left: auto;
+  color: var(--color-gray-500);
+}
+
+/* Icons */
+.icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.chevron {
+  color: var(--color-gray-500);
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* Dark Mode Logo Fix */
+:global(.dark) .logoImage {
+  filter: invert(1) brightness(2);
+}

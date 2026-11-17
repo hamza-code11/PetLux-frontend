@@ -1,19 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image"; // <-- Image import karein
+import Image from "next/image"; 
 import { usePathname } from "next/navigation";
 import { Fragment, useEffect, useRef, useState } from "react";
 
 import type { MenuPetType } from "@/types/menu";
-import SearchBar from "../search/search-bar";
 import {
   BagIcon,
   ChevronIcon,
-  CloseIcon,
   MenuIcon,
-  SearchIcon,
   UserIcon,
+  HeartIcon, // Wishlist Icon
 } from "./icons";
 import MobileDrawer from "./mobile-drawer";
 import styles from "./navbar.module.css";
@@ -21,18 +19,18 @@ import styles from "./navbar.module.css";
 interface NavbarClientProps {
   menu: MenuPetType[];
   cartCount?: number;
+  wishlistCount?: number; // Naya Prop add kiya
 }
 
 export default function NavbarClient({
   menu,
   cartCount = 0,
+  wishlistCount = 0, // Default value 0
 }: NavbarClientProps) {
-  // ... (baaki saara state aur logic same rahega)
   const pathname = usePathname();
 
   const [activeId, setActiveId] = useState<number | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -46,7 +44,6 @@ export default function NavbarClient({
 
   const openMega = (id: number) => {
     clearTimer();
-    setSearchOpen(false);
     setActiveId(id);
   };
 
@@ -59,14 +56,6 @@ export default function NavbarClient({
     clearTimer();
     setActiveId(null);
     setMobileOpen(false);
-    setSearchOpen(false);
-  };
-
-  const toggleSearch = () => {
-    clearTimer();
-    setActiveId(null);
-    setMobileOpen(false);
-    setSearchOpen((prev) => !prev);
   };
 
   useEffect(() => {
@@ -105,7 +94,10 @@ export default function NavbarClient({
   }, [mobileOpen]);
 
   const petHref = (slug: string) => `/shop/${slug}`;
-  const badgeText = cartCount > 99 ? "99+" : String(cartCount);
+  
+  // Dono counts ke liye badge text calculate kiya
+  const cartBadgeText = cartCount > 99 ? "99+" : String(cartCount);
+  const wishlistBadgeText = wishlistCount > 99 ? "99+" : String(wishlistCount);
 
   const renderSimpleLink = (href: string, label: string) => {
     const current = pathname === href;
@@ -146,22 +138,19 @@ export default function NavbarClient({
           aria-label="Open menu"
           aria-expanded={mobileOpen}
           aria-controls="mobile-drawer"
-          onClick={() => {
-            setSearchOpen(false);
-            setMobileOpen(true);
-          }}
+          onClick={() => setMobileOpen(true)}
         >
           <MenuIcon />
         </button>
 
-        {/* Logo Image Yahan Laga Diya Hai */}
+        {/* Logo */}
         <Link href="/" className={styles.logo}>
           <Image 
             src="/logo/logo.png" 
             alt="PetLux Logo" 
-            width={140} // Apne logo ke hisaab se width adjust karein
-            height={40} // Apne logo ke hisaab se height adjust karein
-            priority // Header ka logo hai isliye priority diya
+            width={140}
+            height={40}
+            priority
             className={styles.logoImage}
           />
         </Link>
@@ -253,48 +242,48 @@ export default function NavbarClient({
           <Fragment key="about">{renderSimpleLink("/about", "About")}</Fragment>
         </ul>
 
-        {/* Actions: Search / Account / Cart */}
+        {/* Actions: Account / Wishlist / Cart */}
         <div className={styles.actions}>
-          <button
-            type="button"
-            className={`${styles.iconButton} ${
-              searchOpen ? styles.iconButtonActive : ""
-            }`}
-            aria-label={searchOpen ? "Close search" : "Open search"}
-            aria-expanded={searchOpen}
-            aria-controls="search-panel"
-            onClick={toggleSearch}
-          >
-            {searchOpen ? <CloseIcon /> : <SearchIcon />}
-          </button>
-
           <Link
-            href="/account"
+            href="/profile"
             className={styles.iconButton}
             aria-label="Account"
           >
             <UserIcon />
           </Link>
 
+          {/* Wishlist Icon with Badge */}
+          <Link
+            href="/wishlist"
+            className={styles.iconButton}
+            aria-label={`Wishlist, ${wishlistCount} items`}
+          >
+            <HeartIcon />
+            {wishlistCount > 0 && (
+              <span className={styles.badge}>{wishlistBadgeText}</span>
+            )}
+          </Link>
+
+          {/* Cart Icon with Badge */}
           <Link
             href="/cart"
             className={styles.iconButton}
             aria-label={`Cart, ${cartCount} items`}
           >
             <BagIcon />
-            {cartCount > 0 && <span className={styles.badge}>{badgeText}</span>}
+            {cartCount > 0 && <span className={styles.badge}>{cartBadgeText}</span>}
           </Link>
         </div>
       </nav>
-
-      <SearchBar open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       <MobileDrawer
         menu={menu}
         open={mobileOpen}
         cartCount={cartCount}
+        wishlistCount={wishlistCount}
         onClose={() => setMobileOpen(false)}
       />
     </header>
   );
 }
+

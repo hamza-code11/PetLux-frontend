@@ -1,0 +1,267 @@
+/* =========================================
+   Main Page Layout
+   ========================================= */
+.page {
+  background-color: var(--color-background);
+  min-height: 85vh;
+  padding: clamp(40px, 6vw, 80px) 0;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 2vw, 32px);
+}
+
+/* =========================================
+   Header Skeleton
+   ========================================= */
+.headerWrapper {
+  margin-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  width: 250px;
+  height: 40px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+.subtitle {
+  width: 120px;
+  height: 20px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+/* =========================================
+   Layout Grid
+   ========================================= */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 40px;
+  align-items: start;
+}
+
+/* =========================================
+   Cart Item Skeleton
+   ========================================= */
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.item {
+  display: flex;
+  gap: 20px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+}
+
+.image {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-gray-200);
+  flex-shrink: 0;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 8px;
+}
+
+.category {
+  width: 80px;
+  height: 14px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+.name {
+  width: 60%;
+  height: 24px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  margin-top: 4px;
+}
+
+.variant {
+  width: 100px;
+  height: 24px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  margin-top: 4px;
+}
+
+.bottomRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.qtyBtn {
+  width: 100px;
+  height: 32px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-full);
+}
+
+.price {
+  width: 80px;
+  height: 24px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+/* =========================================
+   Summary Skeleton
+   ========================================= */
+.summaryWrapper {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summaryTitle {
+  width: 150px;
+  height: 28px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+}
+
+.summaryLabel {
+  width: 80px;
+  height: 16px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+.summaryValue {
+  width: 60px;
+  height: 16px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 8px 0;
+}
+
+.summaryTotalLabel {
+  width: 60px;
+  height: 20px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+.summaryTotalValue {
+  width: 80px;
+  height: 20px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+.checkoutBtn {
+  width: 100%;
+  height: 52px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-full);
+  margin-top: 8px;
+}
+
+/* =========================================
+   Animation & Dark Mode
+   ========================================= */
+.title,
+.subtitle,
+.image,
+.category,
+.name,
+.variant,
+.qtyBtn,
+.price,
+.summaryTitle,
+.summaryLabel,
+.summaryValue,
+.summaryTotalLabel,
+.summaryTotalValue,
+.checkoutBtn {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+:global(.dark) .title,
+:global(.dark) .subtitle,
+:global(.dark) .image,
+:global(.dark) .category,
+:global(.dark) .name,
+:global(.dark) .variant,
+:global(.dark) .qtyBtn,
+:global(.dark) .price,
+:global(.dark) .summaryTitle,
+:global(.dark) .summaryLabel,
+:global(.dark) .summaryValue,
+:global(.dark) .summaryTotalLabel,
+:global(.dark) .summaryTotalValue,
+:global(.dark) .checkoutBtn {
+  background-color: var(--color-gray-800);
+}
+
+/* =========================================
+   Responsive
+   ========================================= */
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .item {
+    flex-direction: column;
+    padding: 16px;
+  }
+  
+  .image {
+    width: 100%;
+    height: 200px;
+  }
+
+  .bottomRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+

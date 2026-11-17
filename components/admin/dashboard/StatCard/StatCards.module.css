@@ -1,0 +1,91 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--spacing-5);
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-4) var(--spacing-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-gray-300);
+}
+
+/* Top Row: Icon + Title */
+.headerRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.iconWrapper {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  background: var(--color-background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-foreground);
+  border: 1px solid var(--color-border);
+}
+
+.iconWrapper svg {
+  width: 16px;
+  height: 16px;
+}
+
+.title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-foreground);
+  margin: 0;
+}
+
+/* Subtitle */
+.subtitle {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  margin: 0;
+  line-height: 1.3;
+}
+
+/* Bottom Row: Value + Badge */
+.footerRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: var(--spacing-1);
+}
+
+.value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--color-foreground);
+  line-height: 1;
+}
+
+/* Badge design ko theme ke sath match kiya */
+.badge {
+  background: rgba(16, 185, 129, 0.1); /* Green with opacity */
+  color: #10B981; /* Standard success green */
+  font-size: 10px;
+  font-weight: var(--font-bold);
+  padding: 2px var(--spacing-2);
+  border-radius: var(--radius-full);
+}
+
+/* Dark mode mein badge ki styling adjust ki */
+:global(.dark) .badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34D399; /* Lighter green for dark mode */
+}

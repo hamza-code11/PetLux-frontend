@@ -1,0 +1,141 @@
+.header {
+  width: 100%;
+  margin-bottom: 32px;
+  margin-top: 24px; /* Top se space */
+  padding: 24px 32px;
+  border: 1px solid var(--color-border); /* Border charon taraf */
+  border-radius: var(--radius-lg); /* Rounded corners list ki tarah */
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  margin-bottom: 24px;
+  font-weight: var(--font-medium);
+}
+
+.breadcrumbs a {
+  color: var(--color-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.breadcrumbs a:hover {
+  color: var(--color-foreground);
+}
+
+.separator {
+  color: var(--color-gray-400);
+}
+
+.current {
+  color: var(--color-foreground);
+}
+
+.titleRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.titleLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.5rem + 2vw, 2.5rem);
+  color: var(--color-foreground);
+  margin: 0;
+  line-height: 1.1;
+}
+
+.subtitle {
+  color: var(--color-muted);
+  font-size: var(--text-base);
+  margin: 0;
+}
+
+.count {
+  color: var(--color-foreground);
+  font-weight: var(--font-semibold);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btnOutline {
+  height: 44px;
+  padding: 0 24px;
+  background: transparent;
+  color: var(--color-foreground);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnOutline:hover {
+  background: var(--color-background);
+  border-color: var(--color-gray-400);
+}
+
+.btnSolid {
+  height: 44px;
+  padding: 0 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  border: 1px solid var(--color-foreground);
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btnSolid:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding: 20px;
+    margin-top: 16px;
+  }
+
+  .titleRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btnOutline,
+  .btnSolid {
+    width: 100%;
+  }
+}
+

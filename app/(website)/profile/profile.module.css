@@ -1,0 +1,43 @@
+.page {
+  background-color: var(--color-background);
+  min-height: 85vh;
+  padding: clamp(40px, 6vw, 40px) 0;
+}
+
+.container {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr; /* Left Sidebar, Right Content */
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr; /* Mobile/Tablet par stack ho jayega */
+    gap: 24px;
+  }
+}
+
+
+.placeholder {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 40px;
+  text-align: center;
+  color: var(--color-muted);
+  font-size: var(--text-lg);
+}

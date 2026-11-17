@@ -82,36 +82,7 @@
   overscroll-behavior: contain;
 }
 
-.search {
-  margin-bottom: 8px;
-  padding: 0 14px;
-  height: 46px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--color-muted);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-full);
-}
-
-.search svg {
-  width: 20px;
-  height: 20px;
-  flex-shrink: 0;
-}
-
-.search input {
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  color: var(--color-black);
-  font-family: inherit;
-  font-size: 16px; /* iOS zoom na ho */
-  background: transparent;
-  border: 0;
-  outline: 0;
-}
+/* Search CSS yahan se remove kar diya hai */
 
 .link {
   display: block;
@@ -247,7 +218,7 @@
 .footer {
   padding: 14px 20px calc(14px + env(safe-area-inset-bottom));
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr; /* Ab 3 columns hain */
   gap: 10px;
   border-top: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -300,6 +271,10 @@
 @media (max-width: 360px) {
   .drawer {
     width: 92vw;
+  }
+  
+  .footer {
+    gap: 6px; /* Choti screen par gap kam kiya */
   }
 }
 

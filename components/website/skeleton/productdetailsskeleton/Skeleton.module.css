@@ -1,0 +1,270 @@
+/* =========================================
+   1. Main Page Layout
+   ========================================= */
+.page {
+  background-color: var(--color-background);
+  min-height: 100vh;
+  padding: clamp(40px, 6vw, 80px) 0;
+}
+
+.container {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 clamp(16px, 4vw, 56px);
+}
+
+.topSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(32px, 5vw, 80px);
+  margin-bottom: 80px;
+}
+
+@media (max-width: 900px) {
+  .topSection { grid-template-columns: 1fr; }
+}
+
+/* =========================================
+   2. Gallery Skeleton
+   ========================================= */
+.galleryWrapper {
+  display: flex;
+  gap: 16px;
+}
+
+.thumbnailsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.thumbBox {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-md);
+}
+
+.mainImageBox {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 480px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-xl);
+}
+
+@media (max-width: 900px) {
+  .galleryWrapper { flex-direction: column-reverse; }
+  .thumbnailsWrapper { flex-direction: row; width: 100%; }
+  .thumbBox { width: 70px; }
+}
+
+/* =========================================
+   3. Product Info Skeleton
+   ========================================= */
+.infoWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.infoTopRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.infoCategory {
+  width: 100px;
+  height: 16px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+.infoIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-gray-200);
+}
+
+.infoTitle {
+  width: 80%;
+  height: 32px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+}
+
+.infoPriceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.infoPrice {
+  width: 120px;
+  height: 28px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+.infoReviews {
+  width: 100px;
+  height: 16px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+.infoDescLine {
+  width: 100%;
+  height: 16px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+.infoVariantLabel {
+  width: 100px;
+  height: 16px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  margin-top: 12px;
+}
+
+.infoVariantList {
+  display: flex;
+  gap: 12px;
+}
+
+.infoVariantBtn {
+  width: 90px;
+  height: 60px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-md);
+}
+
+.infoActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.infoQuantity {
+  width: 120px;
+  height: 48px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-full);
+}
+
+.infoCartBtn {
+  flex: 1;
+  height: 48px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-full);
+}
+
+/* =========================================
+   4. Tabs Skeleton
+   ========================================= */
+.tabsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 80px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tabHeader {
+  width: 200px;
+  height: 40px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  margin-bottom: 24px;
+}
+
+.tabLine {
+  width: 100%;
+  height: 16px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+}
+
+/* =========================================
+   5. Related Products Skeleton Title
+   ========================================= */
+.relatedTitle {
+  width: 250px;
+  height: 32px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  margin: 0 auto 32px;
+}
+
+/* =========================================
+   6. Animation & Dark Mode
+   ========================================= */
+.thumbBox,
+.mainImageBox,
+.infoCategory,
+.infoIcon,
+.infoTitle,
+.infoPrice,
+.infoReviews,
+.infoDescLine,
+.infoVariantLabel,
+.infoVariantBtn,
+.infoQuantity,
+.infoCartBtn,
+.tabHeader,
+.tabLine,
+.relatedTitle {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+:global(.dark) .thumbBox,
+:global(.dark) .mainImageBox,
+:global(.dark) .infoCategory,
+:global(.dark) .infoIcon,
+:global(.dark) .infoTitle,
+:global(.dark) .infoPrice,
+:global(.dark) .infoReviews,
+:global(.dark) .infoDescLine,
+:global(.dark) .infoVariantLabel,
+:global(.dark) .infoVariantBtn,
+:global(.dark) .infoQuantity,
+:global(.dark) .infoCartBtn,
+:global(.dark) .tabHeader,
+:global(.dark) .tabLine,
+:global(.dark) .relatedTitle {
+  background-color: var(--color-gray-800);
+}
+
+
+
+
+.relatedGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(12px, 2vw, 24px);
+}
+
+@media (max-width: 1024px) {
+  .relatedGrid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 900px) {
+  .relatedGrid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 640px) {
+  .relatedGrid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+}
+

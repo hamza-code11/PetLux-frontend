@@ -1,0 +1,163 @@
+.page {
+  background-color: var(--color-background);
+  min-height: 85vh;
+  padding: clamp(40px, 6vw, 80px) 0;
+}
+
+.container {
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0 16px;
+  }
+}
+
+/* Shimmer Effect Class */
+.shimmer {
+  background: var(--color-border);
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.shimmer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0,
+    rgba(255, 255, 255, 0.2) 20%,
+    rgba(255, 255, 255, 0.5) 60%,
+    rgba(255, 255, 255, 0)
+  );
+  animation: shimmerAnim 2s infinite;
+}
+
+@keyframes shimmerAnim {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Header Skeleton */
+.headerWrapper {
+  width: 100%;
+  margin-bottom: 32px;
+  padding: 24px 32px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.breadcrumb {
+  width: 120px;
+  height: 16px;
+}
+
+.title {
+  width: 200px;
+  height: 40px;
+}
+
+.subtitle {
+  width: 300px;
+  height: 20px;
+}
+
+@media (max-width: 640px) {
+  .headerWrapper {
+    padding: 20px;
+  }
+}
+
+/* Layout Skeleton */
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+/* Sidebar Skeleton */
+.sidebarWrapper {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.menuItem {
+  width: 100%;
+  height: 44px;
+}
+
+/* Details Skeleton */
+.detailsWrapper {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+}
+
+.detailsHeader {
+  width: 250px;
+  height: 32px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.label {
+  width: 100px;
+  height: 14px;
+}
+
+.value {
+  width: 200px;
+  height: 24px;
+}
+
+@media (max-width: 640px) {
+  .detailsWrapper {
+    padding: 20px;
+  }
+  .infoGrid {
+    grid-template-columns: 1fr;
+  }
+}
+

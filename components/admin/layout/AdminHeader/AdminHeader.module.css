@@ -1,0 +1,69 @@
+.header {
+  height: 72px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 80;
+}
+
+.menuBtn {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--color-foreground);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--radius-md);
+}
+
+.menuBtn:hover {
+  background: var(--color-background);
+}
+
+@media (max-width: 1024px) {
+  .menuBtn {
+    display: block;
+  }
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.userName {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-foreground);
+}
+
+.userRole {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-bold);
+}
+

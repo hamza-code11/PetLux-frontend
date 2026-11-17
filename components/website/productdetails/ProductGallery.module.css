@@ -1,0 +1,70 @@
+.gallery {
+  display: flex;
+  gap: 16px; /* Main image aur thumbnails ke beech space */
+}
+
+/* Left Side: Vertical Thumbnails */
+.thumbnails {
+  display: flex;
+  flex-direction: column; /* Vertical layout */
+  gap: 12px;
+  width: 80px; /* Thumbnails ki width fix ki */
+  flex-shrink: 0;
+}
+
+.thumbBtn {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 2px solid transparent;
+  background-color: var(--color-surface);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.thumbBtn.active {
+  border-color: var(--color-foreground);
+}
+
+.thumbImage {
+  object-fit: cover;
+}
+
+/* Right Side: Main Image (Height Kam ki) */
+.mainImageWrapper {
+  position: relative;
+  width: 100%;
+  /* Height kam karne ke liye aspect-ratio 1/1 (Square) kar diya */
+  aspect-ratio: 1 / 1; 
+  border-radius: var(--radius-xl);
+  background-color: var(--color-surface);
+  overflow: hidden;
+  /* Agar aur kam karni ho toh max-height de sakte hain */
+  max-height: 480px; 
+}
+
+.mainImage {
+  object-fit: cover;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 900px) {
+  .gallery {
+    flex-direction: column-reverse; /* Mobile par thumbnails neeche chale jayenge */
+  }
+
+  .thumbnails {
+    flex-direction: row; /* Mobile par thumbnails horizontal ho jayenge */
+    width: 100%;
+    overflow-x: auto; /* Scrollable */
+    padding-bottom: 8px;
+  }
+
+  .thumbBtn {
+    width: 70px; /* Mobile par thumbnail size */
+    flex-shrink: 0;
+  }
+}
+

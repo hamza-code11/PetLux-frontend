@@ -1,0 +1,33 @@
+.shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--color-background);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* YEH BOHT ZAROORI HAI - Grid/Flex overflow rokne ke liye */
+  transition: margin-left 0.3s ease;
+}
+
+@media (min-width: 1025px) {
+  .main {
+    margin-left: 240px; /* Sidebar ki exact width ke barabar */
+  }
+}
+
+.content {
+  padding: 32px;
+  flex: 1;
+  width: 100%; /* Content ko full width de taake cards adjust ho sakein */
+  overflow-x: hidden; /* Horizontal scroll ko roka */
+}
+
+@media (max-width: 640px) {
+  .content {
+    padding: 20px 16px;
+  }
+}
+

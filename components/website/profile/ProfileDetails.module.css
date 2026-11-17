@@ -1,0 +1,74 @@
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--color-foreground);
+  margin: 0;
+}
+
+.editBtn {
+  background: transparent;
+  color: var(--color-foreground);
+  border: 1px solid var(--color-border);
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.editBtn:hover {
+  background: var(--color-background);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.value {
+  font-size: var(--text-base);
+  color: var(--color-foreground);
+  font-weight: var(--font-medium);
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 20px;
+  }
+  .infoGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+

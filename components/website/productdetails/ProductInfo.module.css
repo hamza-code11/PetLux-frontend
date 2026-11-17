@@ -1,0 +1,240 @@
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 1. Top Row */
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.category {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: var(--font-semibold);
+}
+
+.wishlistBtn {
+  background: transparent;
+  border: none;
+  color: var(--color-foreground);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.wishlistBtn:hover {
+  background: var(--color-surface);
+}
+
+.wishlistBtn .wishlisted {
+  color: #E74C3C; 
+}
+
+/* 2. Product Name */
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.2rem + 1.5vw, 2.2rem);
+  color: var(--color-foreground);
+  margin: 0;
+}
+
+/* 3. Price & Reviews */
+.priceRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.priceWrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+/* Main Price ka font size thoda kam kiya */
+.price {
+  font-size: clamp(1.5rem, 1.3rem + 0.8vw, 2rem); /* Thoda chota kiya */
+  font-weight: var(--font-bold);
+  color: var(--color-foreground);
+}
+
+/* Old Price ka font thoda adjust kiya */
+.oldPrice {
+  font-size: var(--text-base);
+  color: var(--color-gray-400);
+  text-decoration: line-through;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stars {
+  color: var(--color-yellow-dark);
+  font-size: var(--text-sm);
+}
+
+.reviewCount {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.description {
+  color: var(--color-muted);
+  line-height: 1.6;
+  font-size: var(--text-base);
+  margin-top: 8px;
+}
+
+/* 4. Variants */
+.variantsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 8px 0;
+}
+
+.variantLabel {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-foreground);
+}
+
+.variantList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.variantBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 12px 16px;
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 90px;
+}
+
+.variantBtn:hover {
+  border-color: var(--color-gray-400);
+}
+
+/* Variant ka Name */
+.variantName {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-foreground);
+  margin-bottom: 4px;
+}
+
+/* Variant ka Price */
+.variantPrice {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--color-muted);
+}
+
+/* Active Variant State */
+.activeVariant {
+  border-color: var(--color-foreground);
+  background: var(--color-surface);
+}
+
+.activeVariant .variantName {
+  color: var(--color-foreground);
+}
+
+.activeVariant .variantPrice {
+  color: var(--color-foreground);
+}
+
+/* 5. Actions */
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  height: 48px;
+}
+
+.quantity button {
+  width: 40px;
+  height: 100%;
+  background: transparent;
+  border: none;
+  color: var(--color-foreground);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.quantity button:hover {
+  background: var(--color-surface);
+}
+
+.quantity span {
+  width: 32px;
+  text-align: center;
+  font-weight: var(--font-semibold);
+  font-size: var(--text-base);
+}
+
+.addToCartBtn {
+  flex: 1;
+  height: 48px;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.addToCartBtn:hover {
+  opacity: 0.9;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .priceRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .variantBtn {
+    flex: 1;
+  }
+}

@@ -3,13 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { SEARCH_PARAM, SEARCH_PATH } from "@/types/search";
 import type { MenuPetType } from "@/types/menu";
 import {
   BagIcon,
   ChevronIcon,
   CloseIcon,
-  SearchIcon,
+  HeartIcon, // Wishlist Icon
   UserIcon,
 } from "./icons";
 import styles from "./mobile-drawer.module.css";
@@ -18,6 +17,7 @@ interface MobileDrawerProps {
   menu: MenuPetType[];
   open: boolean;
   cartCount?: number;
+  wishlistCount?: number; // Naya prop
   onClose: () => void;
 }
 
@@ -25,6 +25,7 @@ export default function MobileDrawer({
   menu,
   open,
   cartCount = 0,
+  wishlistCount = 0, // Default value
   onClose,
 }: MobileDrawerProps) {
   const [openPet, setOpenPet] = useState<number | null>(null);
@@ -39,7 +40,10 @@ export default function MobileDrawer({
   }, [open]);
 
   const petHref = (slug: string) => `/shop/${slug}`;
-  const badgeText = cartCount > 99 ? "99+" : String(cartCount);
+  
+  // Badge text calculate kiya
+  const cartBadgeText = cartCount > 99 ? "99+" : String(cartCount);
+  const wishlistBadgeText = wishlistCount > 99 ? "99+" : String(wishlistCount);
 
   return (
     <>
@@ -70,20 +74,7 @@ export default function MobileDrawer({
         </div>
 
         <div className={styles.body}>
-          <form
-            action={SEARCH_PATH}
-            method="get"
-            role="search"
-            className={styles.search}
-          >
-            <SearchIcon />
-            <input
-              type="search"
-              name={SEARCH_PARAM}
-              placeholder="Search products"
-              aria-label="Search products"
-            />
-          </form>
+          {/* Search form yahan se remove kar diya hai */}
 
           <Link href="/" className={styles.link} onClick={onClose}>
             Home
@@ -204,14 +195,26 @@ export default function MobileDrawer({
         <div className={styles.footer}>
           <Link href="/account" className={styles.action} onClick={onClose}>
             <UserIcon />
-            My Account
+            Account
           </Link>
 
+          {/* Naya Wishlist Button */}
+          <Link href="/wishlist" className={styles.action} onClick={onClose}>
+            <span className={styles.bag}>
+              <HeartIcon />
+              {wishlistCount > 0 && (
+                <span className={styles.badge}>{wishlistBadgeText}</span>
+              )}
+            </span>
+            Wishlist
+          </Link>
+
+          {/* Cart Button */}
           <Link href="/cart" className={styles.action} onClick={onClose}>
             <span className={styles.bag}>
               <BagIcon />
               {cartCount > 0 && (
-                <span className={styles.badge}>{badgeText}</span>
+                <span className={styles.badge}>{cartBadgeText}</span>
               )}
             </span>
             Cart
@@ -221,3 +224,4 @@ export default function MobileDrawer({
     </>
   );
 }
+

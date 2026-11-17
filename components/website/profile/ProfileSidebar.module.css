@@ -1,0 +1,77 @@
+.sidebar {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.link {
+  width: 100%; /* Button ko full width di */
+  text-align: left; /* Text ko left align kiya */
+  padding: 12px 16px;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all 0.2s ease;
+}
+
+.link:hover {
+  background: var(--color-background);
+  color: var(--color-foreground);
+}
+
+.active {
+  background: var(--color-foreground);
+  color: var(--color-background);
+}
+
+.logoutBtn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: #E74C3C;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background: rgba(231, 76, 60, 0.1);
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    padding: 16px;
+    gap: 16px;
+  }
+  .nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .link {
+    padding: 8px 12px;
+    width: auto; /* Mobile par buttons content ke hisab se size len */
+  }
+  .logoutBtn {
+    padding: 10px;
+    font-size: var(--text-xs);
+  }
+}
+

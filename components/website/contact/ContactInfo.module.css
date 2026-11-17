@@ -1,0 +1,65 @@
+.infoWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--color-foreground);
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.infoList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Alag alag box (card) style */
+.infoCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.infoCard:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--color-gray-300);
+}
+
+.iconBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: var(--color-background);
+  border-radius: 50%;
+  color: var(--color-foreground);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.infoCard h4 {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-foreground);
+  margin: 0 0 4px 0;
+}
+
+.infoCard p {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  margin: 0 0 4px 0;
+  line-height: 1.5;
+}
+

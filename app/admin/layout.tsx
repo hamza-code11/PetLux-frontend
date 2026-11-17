@@ -1,4 +1,5 @@
-
+import AdminShell from '@/components/admin/layout/AdminShell/AdminShell';
+import AdminGuard from '@/components/admin/layout/AdminGuard';
 
 export const metadata = {
   title: {
@@ -11,6 +12,8 @@ export default function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-      <div>{children}</div>
+    <AdminGuard>
+      <AdminShell>{children}</AdminShell>
+    </AdminGuard>
   );
 }
