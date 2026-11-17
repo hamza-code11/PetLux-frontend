@@ -53,6 +53,7 @@ export default function ShopByPet() {
                     src={c.image}
                     alt={c.name}
                     fill
+                    unoptimized
                     sizes="(max-width: 400px) 100vw, (max-width: 1024px) 50vw, 25vw"
                     className={styles.image}
                   />

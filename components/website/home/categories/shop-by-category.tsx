@@ -18,7 +18,7 @@ const CATEGORIES = [
   { 
     id: "treats", 
     name: "Treats", 
-    image: "https://images.unsplash.com/photo-1623366302587-b25ee0f5c4e3?w=600&q=80", 
+    image: "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=600&q=80", 
     href: "/shop/treats" 
   },
   { 
@@ -70,6 +70,7 @@ export default function ShopByCategory() {
                 src={cat.image}
                 alt={cat.name}
                 fill
+                unoptimized
                 sizes="(max-width: 1024px) 50vw, 25vw"
                 className={styles.image}
               />

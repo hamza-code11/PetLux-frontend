@@ -43,6 +43,7 @@ export default function AsymmetricBanner() {
             src="/hero/01.jfif" 
             alt="Premium pet food ingredients"
             fill
+            unoptimized
             sizes="(max-width: 1024px) 100vw, 50vw"
             className={styles.image}
           />
