@@ -1,0 +1,199 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  width: 100%; /* Full width force kiya */
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: var(--spacing-8);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-6);
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .formGrid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+  }
+}
+
+.inputsSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-5);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-foreground);
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 0 var(--spacing-4);
+  background: var(--color-background);
+  color: var(--color-foreground);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-family: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-foreground);
+}
+
+/* Disabled input styling */
+.inputDisabled {
+  background: var(--color-gray-100);
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+
+.helpText {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+
+/* File Upload Box */
+.hiddenInput {
+  display: none;
+}
+
+.uploadBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-6);
+  background: var(--color-background);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--color-muted);
+}
+
+.uploadBox:hover {
+  background: var(--color-gray-50);
+  border-color: var(--color-foreground);
+  color: var(--color-foreground);
+}
+
+.uploadBox span {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+}
+
+.fileName {
+  font-size: var(--text-xs) !important;
+  color: var(--color-foreground) !important;
+  font-weight: var(--font-semibold) !important;
+  background: var(--color-gray-200);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+/* Image Preview Section */
+.previewSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.imagePreviewWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--color-background);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: var(--spacing-2);
+}
+
+.imagePlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-muted);
+}
+
+.imagePlaceholder span {
+  font-size: var(--text-sm);
+}
+
+/* Actions */
+.formActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-3);
+}
+
+.cancelBtn {
+  height: 40px;
+  padding: 0 var(--spacing-5);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--color-foreground);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  text-decoration: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  transition: background 0.2s ease;
+}
+
+.cancelBtn:hover {
+  background: var(--color-surface);
+}
+
+.submitBtn {
+  height: 40px;
+  padding: 0 var(--spacing-6);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.submitBtn:hover {
+  opacity: 0.9;
+}

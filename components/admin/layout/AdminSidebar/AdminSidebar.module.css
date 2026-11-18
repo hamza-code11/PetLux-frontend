@@ -26,7 +26,7 @@
   flex-direction: column;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
-  overflow-y: auto;
+  /* overflow-y: auto; <-- Ise hata kar .nav me daala hai */
 }
 
 @media (min-width: 1025px) {
@@ -63,9 +63,11 @@
   height: 50px; 
 }
 
-/* Nav Container */
+/* Nav Container - Isko scrollable banaya */
 .nav {
-  padding: var(--spacing-4) var(--spacing-3) var(--spacing-8);
+  flex: 1;
+  overflow-y: auto; 
+  padding: var(--spacing-4) var(--spacing-3) var(--spacing-4);
   display: flex;
   flex-direction: column;
   gap: var(--spacing-6);
@@ -102,7 +104,7 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--color-gray-700); /* Gray 700 use kiya */
+  color: var(--color-gray-700);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   border-radius: var(--radius-md);
@@ -118,13 +120,12 @@
 }
 
 .menuBtn:hover {
-  background: var(--color-gray-100); /* Gray 100 hover */
-  color: var(--color-gray-900); /* Gray 900 text */
+  background: var(--color-gray-100);
+  color: var(--color-gray-900);
 }
 
-/* Active state ab gray use karta hai */
 .menuBtnActive {
-  color: var(--color-gray-900); /* Gray 900 for active text */
+  color: var(--color-gray-900);
   font-weight: var(--font-semibold);
 }
 
@@ -143,7 +144,7 @@
 
 .subLink {
   padding: var(--spacing-2) var(--spacing-3);
-  color: var(--color-gray-500); /* Gray 500 */
+  color: var(--color-gray-500);
   font-size: var(--text-sm);
   text-decoration: none;
   border-radius: var(--radius-md);
@@ -152,14 +153,13 @@
 }
 
 .subLink:hover {
-  color: var(--color-gray-900); /* Gray 900 hover */
-  background: var(--color-gray-100); /* Gray 100 background */
+  color: var(--color-gray-900);
+  background: var(--color-gray-100);
 }
 
-/* Active Sub-link */
 .subLinkActive {
-  background: var(--color-gray-200); /* Gray 200 background */
-  color: var(--color-gray-900); /* Gray 900 text */
+  background: var(--color-gray-200);
+  color: var(--color-gray-900);
   font-weight: var(--font-semibold);
 }
 
@@ -169,7 +169,7 @@
   align-items: center;
   gap: var(--spacing-3);
   padding: var(--spacing-2) var(--spacing-3);
-  color: var(--color-gray-500); /* Gray 500 */
+  color: var(--color-gray-500);
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   text-decoration: none;
@@ -183,9 +183,10 @@
   color: var(--color-gray-900);
 }
 
-.link .chevronRight {
-  margin-left: auto;
-  color: var(--color-gray-500);
+.linkActive {
+  background: var(--color-gray-200); 
+  color: var(--color-gray-900);
+  font-weight: var(--font-semibold);
 }
 
 /* Icons */
@@ -205,7 +206,44 @@
   transform: rotate(180deg);
 }
 
+/* --- NEW: Logout Section --- */
+.logoutWrapper {
+  flex-shrink: 0;
+  padding: var(--spacing-4) var(--spacing-3);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface); /* Ensure it stays solid when scrolling */
+  margin-top: auto; /* Push to bottom if nav is short */
+}
+
+.logoutBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  width: 100%;
+  padding: var(--spacing-2) var(--spacing-3);
+  background: transparent;
+  color: #E74C3C; /* Red color for delete/logout */
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  text-decoration: none;
+  border: 1px solid rgba(231, 76, 60, 0.2);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.logoutBtn:hover {
+  background: rgba(231, 76, 60, 0.1);
+  border-color: rgba(231, 76, 60, 0.4);
+}
+
+.logoutBtn .icon {
+  color: #E74C3C;
+}
+
 /* Dark Mode Logo Fix */
 :global(.dark) .logoImage {
   filter: invert(1) brightness(2);
 }
+
