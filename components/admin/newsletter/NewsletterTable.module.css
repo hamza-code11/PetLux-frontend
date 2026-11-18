@@ -1,0 +1,35 @@
+.tableLayout { display: flex; flex-direction: column; flex: 1; min-height: 0; gap: var(--spacing-4); }
+
+.filterBar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--spacing-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--spacing-3) var(--spacing-4); flex-shrink: 0; }
+.searchWrapper { position: relative; flex: 1; min-width: 250px; }
+.searchIcon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; color: var(--color-muted); }
+.searchInput { width: 100%; height: 40px; padding: 0 12px 0 38px; background: var(--color-background); color: var(--color-foreground); border: 1px solid var(--color-border); border-radius: var(--radius-md); font-size: var(--text-sm); outline: none; transition: border-color 0.2s ease; }
+.searchInput:focus { border-color: var(--color-foreground); }
+
+.tableScrollArea { flex: 1; overflow-y: auto; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); }
+.tableWrapper { min-width: 100%; }
+.table { width: 100%; border-collapse: collapse; text-align: left; }
+.table th, .table td { padding: var(--spacing-4) var(--spacing-5); border-bottom: 1px solid var(--color-border); vertical-align: middle; }
+.table th { background: var(--color-gray-50); font-size: var(--text-xs); font-weight: var(--font-semibold); color: var(--color-muted); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--color-border); position: sticky; top: 0; z-index: 1; }
+.table tr:last-child td { border-bottom: none; }
+.table tr { transition: background-color 0.2s ease; }
+.table tr:hover td { background: var(--color-gray-50); }
+
+.idHead { width: 80px; }
+.idCol { font-size: var(--text-sm); font-weight: var(--font-medium); color: var(--color-muted); }
+.emailCol { font-size: var(--text-sm); font-weight: var(--font-medium); color: var(--color-foreground); }
+.dateCol { font-size: var(--text-sm); color: var(--color-muted); white-space: nowrap; }
+
+.actionsHead { text-align: right; }
+.actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--spacing-2); }
+.iconBtn { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; background: transparent; color: var(--color-muted); border: 1px solid transparent; border-radius: var(--radius-md); cursor: pointer; transition: all 0.2s ease; }
+.iconBtn:hover { background: var(--color-gray-100); color: var(--color-foreground); border-color: var(--color-border); }
+.deleteBtn:hover { color: #E74C3C; background: rgba(231, 76, 60, 0.1); border-color: rgba(231, 76, 60, 0.2); }
+
+:global(.dark) .table th { background: var(--color-gray-100); }
+:global(.dark) .table tr:hover td { background: var(--color-gray-100); }
+:global(.dark) .iconBtn:hover { background: var(--color-gray-200); }
+:global(.dark) .deleteBtn:hover { background: rgba(231, 76, 60, 0.15); }
+
+.emptyState { text-align: center; padding: var(--spacing-10) !important; color: var(--color-muted); font-size: var(--text-base); }
+.paginationWrapper { flex-shrink: 0; background: transparent; }
