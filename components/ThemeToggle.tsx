@@ -4,14 +4,20 @@ import React from 'react';
 import { useTheme } from '@/app/providers/ThemeProvider';
 import styles from './ThemeToggle.module.css';
 
-export default function ThemeToggle() {
+interface ThemeToggleProps {
+  variant?: 'default' | 'adaptive';
+}
+
+export default function ThemeToggle({ variant = 'default' }: ThemeToggleProps) {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === 'dark';
 
   return (
     <button
       type="button"
-      className={`${styles.toggleSwitch} ${isDark ? styles.dark : ''}`}
+      className={`${styles.toggleSwitch} ${isDark ? styles.dark : ''} ${
+        variant === 'adaptive' ? styles.adaptive : ''
+      }`}
       onClick={toggleTheme}
       aria-label="Toggle Theme"
       role="switch"
@@ -36,9 +42,10 @@ export default function ThemeToggle() {
           <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
         </svg>
       </span>
-      
+
       {/* Slider Circle */}
       <span className={styles.slider} />
     </button>
   );
 }
+

@@ -243,7 +243,7 @@
 }
 
 /* Dark Mode Logo Fix */
-:global(.dark) .logoImage {
+/* :global(.dark) .logoImage {
   filter: invert(1) brightness(2);
-}
+} */
 
