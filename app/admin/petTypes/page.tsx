@@ -29,7 +29,7 @@ export default function PetTypesPage() {
       </div>
 
       {/* Table Component (Yeh ab scrollable area handle karega) */}
-      <PetTypesTable initialData={PET_TYPES} />
+      <PetTypesTable/>
 
     </div>
   );

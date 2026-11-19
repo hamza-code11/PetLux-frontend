@@ -3,49 +3,56 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useForgotPassword, useVerifyOtp, useResetPassword } from "@/hooks/useAuth";
+import { useToast } from "@/components/ui/Toast/ToastContext"; 
 import styles from "./ForgotPasswordForm.module.css";
 
 export default function ForgotPasswordForm() {
-  const router = useRouter();
   const [step, setStep] = useState(1);
-  
   const [email, setEmail] = useState("");
-  const [otpArray, setOtpArray] = useState(["", "", "", "", "", ""]); // 6 boxes for OTP
+  const [otpArray, setOtpArray] = useState(["", "", "", "", "", ""]);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [resetToken, setResetToken] = useState("");
+  
+  // Eye icon states
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const { toast } = useToast(); // Toast hook
+
+  const forgotPasswordMutation = useForgotPassword();
+  const verifyOtpMutation = useVerifyOtp();
+  const resetPasswordMutation = useResetPassword();
 
   // Step 1: Send OTP
   const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setTimeout(() => {
-      alert(`OTP sent to ${email} (Demo OTP: 123456)`);
-      setStep(2);
-      setIsLoading(false);
-    }, 1000);
+    forgotPasswordMutation.mutate(
+      { email },
+      {
+        onSuccess: () => {
+          toast.success("OTP sent to your email address.");
+          setStep(2);
+        },
+        onError: (err: any) => {
+          toast.error(err.response?.data?.message || "Failed to send OTP. Please try again.");
+        },
+      }
+    );
   };
 
   // OTP Input Logic
   const handleOtpChange = (index: number, value: string) => {
-    if (isNaN(Number(value))) return; // Only numbers allowed
-    
+    if (isNaN(Number(value))) return;
     const newOtp = [...otpArray];
-    // Agar user ek sath multiple digits paste kare toh handle karein
-    newOtp[index] = value.substring(value.length - 1); 
+    newOtp[index] = value.substring(value.length - 1);
     setOtpArray(newOtp);
-
-    // Auto focus next input
-    if (value && index < 5) {
-      otpRefs.current[index + 1]?.focus();
-    }
+    if (value && index < 5) otpRefs.current[index + 1]?.focus();
   };
 
   const handleOtpKeyDown = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    // Backspace logic: agar box khali hai toh pichle box par jaye
     if (e.key === "Backspace" && !otpArray[index] && index > 0) {
       otpRefs.current[index - 1]?.focus();
     }
@@ -54,53 +61,63 @@ export default function ForgotPasswordForm() {
   // Step 2: Verify OTP
   const handleVerifyOtp = (e: React.FormEvent) => {
     e.preventDefault();
-    const enteredOtp = otpArray.join("");
-    
-    if (enteredOtp.length !== 6) {
-      alert("Please enter all 6 digits.");
+    const otp = otpArray.join("");
+    if (otp.length !== 6) {
+      toast.error("Please enter all 6 digits.");
       return;
     }
 
-    setIsLoading(true);
-    setTimeout(() => {
-      if (enteredOtp === "123456") {
-        alert("OTP verified successfully!");
-        setStep(3);
-      } else {
-        alert("Invalid OTP. Please try again (Hint: 123456)");
+    verifyOtpMutation.mutate(
+      { email, otp },
+      {
+        onSuccess: (data) => {
+          setResetToken(data.reset_token);
+          toast.success("OTP verified successfully!");
+          setStep(3);
+        },
+        onError: (err: any) => {
+          toast.error(err.response?.data?.message || "Invalid or expired OTP.");
+        },
       }
-      setIsLoading(false);
-    }, 1000);
+    );
   };
 
   // Step 3: Reset Password
   const handleResetPassword = (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      alert("Passwords do not match!");
+      toast.error("Passwords do not match!");
       return;
     }
-    setIsLoading(true);
-    setTimeout(() => {
-      alert("Password reset successfully! Please login.");
-      router.push("/login");
-      setIsLoading(false);
-    }, 1000);
+    if (password.length < 8) {
+      toast.error("Password must be at least 8 characters long.");
+      return;
+    }
+
+    resetPasswordMutation.mutate(
+      {
+        email,
+        reset_token: resetToken,
+        password,
+        password_confirmation: confirmPassword,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Password reset successfully! Please login.");
+          // Redirect `useAuth.ts` me handle ho raha hai (/login)
+        },
+        onError: (err: any) => {
+          toast.error(err.response?.data?.message || "Failed to reset password.");
+        },
+      }
+    );
   };
 
   return (
     <div className={styles.card}>
-      
       <div className={styles.logoWrapper}>
         <Link href="/">
-          <Image 
-            src="/logo/logo.png" 
-            alt="PetLux Logo" 
-            width={120} 
-            height={40} 
-            className={styles.logoImage}
-            priority
-          />
+          <Image src="/logo/logo.png" alt="PetLux Logo" width={120} height={40} priority />
         </Link>
       </div>
 
@@ -129,8 +146,8 @@ export default function ForgotPasswordForm() {
               required
             />
           </div>
-          <button type="submit" className={styles.submitBtn} disabled={isLoading}>
-            {isLoading ? "Sending..." : "Send OTP"}
+          <button type="submit" className={styles.submitBtn} disabled={forgotPasswordMutation.isPending}>
+            {forgotPasswordMutation.isPending ? "Sending..." : "Send OTP"}
           </button>
         </form>
       )}
@@ -154,39 +171,79 @@ export default function ForgotPasswordForm() {
               />
             ))}
           </div>
-          <button type="submit" className={styles.submitBtn} disabled={isLoading}>
-            {isLoading ? "Verifying..." : "Verify OTP"}
+          <button type="submit" className={styles.submitBtn} disabled={verifyOtpMutation.isPending}>
+            {verifyOtpMutation.isPending ? "Verifying..." : "Verify OTP"}
           </button>
         </form>
       )}
 
-      {/* Step 3: New Password */}
+      {/* Step 3: New Password with Eye Icons */}
       {step === 3 && (
         <form onSubmit={handleResetPassword} className={styles.form}>
           <div className={styles.formGroup}>
             <label className={styles.label}>New Password</label>
-            <input
-              type="password"
-              className={styles.input}
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <div className={styles.passwordWrapper}>
+              <input
+                type={showPassword ? "text" : "password"}
+                className={styles.input}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className={styles.eyeBtn}
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+              >
+                {showPassword ? (
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                  </svg>
+                ) : (
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
+
           <div className={styles.formGroup}>
             <label className={styles.label}>Confirm Password</label>
-            <input
-              type="password"
-              className={styles.input}
-              placeholder="••••••••"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
+            <div className={styles.passwordWrapper}>
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                className={styles.input}
+                placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className={styles.eyeBtn}
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                tabIndex={-1}
+              >
+                {showConfirmPassword ? (
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                  </svg>
+                ) : (
+                  <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                )}
+              </button>
+            </div>
           </div>
-          <button type="submit" className={styles.submitBtn} disabled={isLoading}>
-            {isLoading ? "Resetting..." : "Reset Password"}
+          
+          <button type="submit" className={styles.submitBtn} disabled={resetPasswordMutation.isPending}>
+            {resetPasswordMutation.isPending ? "Resetting..." : "Reset Password"}
           </button>
         </form>
       )}
@@ -202,4 +259,3 @@ export default function ForgotPasswordForm() {
     </div>
   );
 }
-

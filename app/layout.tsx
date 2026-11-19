@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import QueryProvider from "@/src/providers/QueryProvider";
 import { ThemeProvider } from "@/app/providers/ThemeProvider";
+import { ToastProvider } from "@/components/ui/Toast/ToastContext";
 
 import "./globals.css";
 
@@ -45,7 +46,11 @@ export default function RootLayout({
       </head>
       <body>
         <ThemeProvider>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <ToastProvider>
+              {children}
+            </ToastProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

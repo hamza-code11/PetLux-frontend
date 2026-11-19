@@ -3,116 +3,95 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { PetType } from "@/types/pettype";
-import styles from "./PetTypeForm.module.css"; // Same CSS reuse ki hai
+import { useGetPetType, useUpdatePetType } from "@/hooks/usePetTypes";
+import { useToast } from "@/components/ui/Toast/ToastContext";
+import { getImageUrl, isLocalImage } from "@/lib/imageUrl"; // getImageUrl import karein
+import styles from "./PetTypeForm.module.css";
 
 interface Props {
-  initialData: PetType;
+  id: number;
 }
 
-export default function EditPetTypeForm({ initialData }: Props) {
+export default function EditPetTypeForm({ id }: Props) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
-  const [name, setName] = useState(initialData.name);
-  const [slug, setSlug] = useState(initialData.slug);
-  const [imagePreview, setImagePreview] = useState<string | null>(initialData.image);
+  // Fetch single item
+  const { data, isLoading } = useGetPetType(id);
+  const petType = data?.data;
+
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  // Auto-generate slug (only if name changes)
+  const { mutate: updatePetType, isPending } = useUpdatePetType();
+
+  // Data load hone par form fill karein
+  useEffect(() => {
+    if (petType) {
+      setName(petType.name);
+      setSlug(petType.slug);
+      // Yahan getImageUrl use karein taaki port 8000 add ho jaye
+      setImagePreview(getImageUrl(petType.image_path)); 
+    }
+  }, [petType]);
+
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setName(value);
-    
-    const generatedSlug = value
-      .toLowerCase()
-      .trim()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "");
+    const generatedSlug = value.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)+/g, "");
     setSlug(generatedSlug);
   };
 
-  // Handle New Image Upload
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
-      const objectUrl = URL.createObjectURL(file);
-      setImagePreview(objectUrl);
+      setImagePreview(URL.createObjectURL(file));
     }
-  };
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Yahan API call update logic aayega
-    console.log({ id: initialData.id, name, slug, imageFile });
-    
-    alert("Pet Type updated successfully!");
-    router.push("/admin/petTypes");
+    updatePetType(
+      { id, data: { name, slug, image: imageFile || undefined } },
+      {
+        onSuccess: () => {
+          toast.success("Pet Type updated successfully!");
+          router.push("/admin/petTypes");
+        },
+        onError: (err: any) => {
+          toast.error(err.response?.data?.message || "Failed to update pet type.");
+        },
+      }
+    );
   };
+
+  if (isLoading) return <div style={{ padding: '20px' }}>Loading...</div>;
+  if (!petType) return <div>Pet Type not found.</div>;
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      
       <div className={styles.formGrid}>
-        {/* Left Side: Inputs */}
         <div className={styles.inputsSection}>
-          
           <div className={styles.formGroup}>
             <label className={styles.label}>Pet Type Name</label>
-            <input
-              type="text"
-              className={styles.input}
-              placeholder="e.g. Dog, Cat, Bird"
-              value={name}
-              onChange={handleNameChange}
-              required
-            />
+            <input type="text" className={styles.input} value={name} onChange={handleNameChange} required />
           </div>
-
           <div className={styles.formGroup}>
-            <label className={styles.label}>Slug (Auto-generated)</label>
-            <input
-              type="text"
-              className={`${styles.input} ${styles.inputDisabled}`}
-              placeholder="e.g. dog-cat-bird"
-              value={slug}
-              readOnly
-            />
-            <span className={styles.helpText}>
-              Generated automatically from the name.
-            </span>
+            <label className={styles.label}>Slug</label>
+            <input type="text" className={`${styles.input} ${styles.inputDisabled}`} value={slug} readOnly />
           </div>
-
-          {/* Image Upload Section */}
           <div className={styles.formGroup}>
-            <label className={styles.label}>Update Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              ref={fileInputRef}
-              onChange={handleImageChange}
-              className={styles.hiddenInput}
-            />
-            
-            <div 
-              className={styles.uploadBox} 
-              onClick={triggerFileInput}
-            >
-              <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-              </svg>
-              <span>{imageFile ? "Change Image" : "Click to upload new image"}</span>
-              {imageFile && <span className={styles.fileName}>{imageFile.name}</span>}
+            <label className={styles.label}>Update Image (Optional)</label>
+            <input type="file" accept="image/*" ref={fileInputRef} onChange={handleImageChange} className={styles.hiddenInput} />
+            <div className={styles.uploadBox} onClick={() => fileInputRef.current?.click()}>
+              <span>{imageFile ? "Change Image" : "Click to change image"}</span>
             </div>
           </div>
         </div>
-
-        {/* Right Side: Image Preview */}
         <div className={styles.previewSection}>
           <span className={styles.label}>Image Preview</span>
           <div className={styles.imagePreviewWrapper}>
@@ -120,29 +99,18 @@ export default function EditPetTypeForm({ initialData }: Props) {
               <img 
                 src={imagePreview} 
                 alt="Preview" 
-                className={styles.previewImage}
+                className={styles.previewImage} 
               />
-            ) : (
-              <div className={styles.imagePlaceholder}>
-                <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span>No Image Selected</span>
-              </div>
-            )}
+            ) : <div className={styles.imagePlaceholder}><span>No Image</span></div>}
           </div>
         </div>
       </div>
-
       <div className={styles.formActions}>
-        <Link href="/admin/petTypes" className={styles.cancelBtn}>
-          Cancel
-        </Link>
-        <button type="submit" className={styles.submitBtn}>
-          Update Pet Type
+        <Link href="/admin/petTypes" className={styles.cancelBtn}>Cancel</Link>
+        <button type="submit" className={styles.submitBtn} disabled={isPending}>
+          {isPending ? "Updating..." : "Update Pet Type"}
         </button>
       </div>
-
     </form>
   );
 }

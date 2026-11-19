@@ -1,11 +1,9 @@
 import Link from "next/link";
-import { PET_TYPES } from "@/data/pettype";
 import EditPetTypeForm from "@/components/admin/petTypes/EditPetTypeForm";
-import { notFound } from "next/navigation";
 import styles from "./EditPetTypePage.module.css";
 
 interface Props {
-  params: Promise<{ id: string }>; // Next.js 15 mein params ek Promise hai
+  params: Promise<{ id: string }>; 
 }
 
 export const metadata = {
@@ -13,28 +11,17 @@ export const metadata = {
 };
 
 export default async function EditPetTypePage({ params }: Props) {
-  // Promise ko unwrap (await) karna zaroori hai
+  // Promise ko unwrap (await) karein
   const { id } = await params;
-
-  console.log("URL se aayi ID:", id);
-
-  // Data se match karein
-  const petType = PET_TYPES.find((p) => p.id === Number(id));
-
-  // Agar ID database mein nahi mili toh 404 page
-  if (!petType) {
-    notFound();
-  }
 
   return (
     <div className={styles.container}>
-      
       {/* Header Box */}
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>Edit Pet Type</h1>
           <p className={styles.subtitle}>
-            Update the details for <strong>{petType.name}</strong>.
+            Update the details for this pet type.
           </p>
         </div>
         <Link href="/admin/petTypes" className={styles.backBtn}>
@@ -45,9 +32,8 @@ export default async function EditPetTypePage({ params }: Props) {
         </Link>
       </div>
 
-      {/* Form Component */}
-      <EditPetTypeForm initialData={petType} />
-
+      {/* Form Component - Yahan ID pass karein */}
+      <EditPetTypeForm id={Number(id)} />
     </div>
   );
 }

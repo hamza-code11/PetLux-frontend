@@ -4,6 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useLogout } from "@/hooks/useAuth"; // Logout hook
+import { useToast } from "@/components/ui/Toast/ToastContext"; // Toast hook
 import styles from "./AdminSidebar.module.css";
 
 interface SidebarProps {
@@ -13,6 +15,8 @@ interface SidebarProps {
 
 export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const { toast } = useToast();
+  const { mutate: logout, isPending: isLoggingOut } = useLogout(); // Logout hook initialization
   
   // Dropdown states
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({
@@ -31,6 +35,16 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
 
   const getSubLinkClass = (href: string) => {
     return pathname === href ? styles.subLinkActive : styles.subLink;
+  };
+
+  // Logout Handler
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        toast.success("Logged out successfully!");
+        onClose(); // Mobile drawer band karne ke liye
+      }
+    });
   };
 
   return (
@@ -219,11 +233,15 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* Logout Button Fixed at Bottom */}
         <div className={styles.logoutWrapper}>
-          <button onClick={onClose} className={styles.logoutBtn}>
+          <button 
+            onClick={handleLogout} 
+            className={styles.logoutBtn}
+            disabled={isLoggingOut}
+          >
             <svg className={styles.icon} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            Logout
+            {isLoggingOut ? "Logging out..." : "Logout"}
           </button>
         </div>
 
@@ -231,3 +249,5 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
     </>
   );
 }
+
+

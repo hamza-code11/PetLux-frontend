@@ -1,20 +1,32 @@
 "use client";
 
+import { useLogout } from "@/hooks/useAuth";
+import { useToast } from "@/components/ui/Toast/ToastContext";
 import styles from "./ProfileSidebar.module.css";
 
-// Props add kiye taake parent state control kar sake
 interface ProfileSidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
 }
 
 export default function ProfileSidebar({ activeTab, setActiveTab }: ProfileSidebarProps) {
+  const { mutate: logout, isPending } = useLogout();
+  const { toast } = useToast();
+
   const links = [
     { id: "details", name: "Profile Details" },
     { id: "edit", name: "Edit Profile" },
     { id: "orders", name: "My Orders" },
     { id: "track", name: "Track Orders" },
   ];
+
+  const handleLogout = () => {
+    logout(undefined, {
+      onSuccess: () => {
+        toast.success("Logged out successfully!");
+      }
+    });
+  };
 
   return (
     <aside className={styles.sidebar}>
@@ -29,7 +41,13 @@ export default function ProfileSidebar({ activeTab, setActiveTab }: ProfileSideb
           </button>
         ))}
       </nav>
-      <button className={styles.logoutBtn}>Log Out</button>
+      <button 
+        className={styles.logoutBtn} 
+        onClick={handleLogout}
+        disabled={isPending}
+      >
+        {isPending ? "Logging out..." : "Log Out"}
+      </button>
     </aside>
   );
 }
