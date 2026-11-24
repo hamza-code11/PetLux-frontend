@@ -1,34 +1,72 @@
+// types/product.ts
+
+// Nested Image Type (Product aur Variant dono ke liye)
 export interface ProductImage {
-  id: string;
-  file: File | null;
-  previewUrl: string;
+  id: number;
+  image_path: string;
+  image_url: string;
 }
 
+// Variant Type
 export interface ProductVariant {
-  id: string;
+  id: number;
+  product_id: number;
   name: string;
   slug: string;
-  regularPrice: string;
-  salePrice: string;
-  quantity: string;
-  description: string;
+  regular_price: string;
+  sale_price: string | null;
+  quantity: number;
+  description: string | null;
   images: ProductImage[];
+  created_at: string;
+  updated_at: string;
 }
 
+// Product Type
 export interface Product {
-  id?: number;
+  id: number;
   name: string;
   slug: string;
   status: "draft" | "publish";
-  quantity?: string; // <-- YAHAN OPTIONAL (?) LAGA DIYA
-  shortDescription: string;
-  longDescription: string;
-  petType: string;
-  category: string;
-  subcategory: string;
-  hasVariants: boolean;
-  regularPrice?: string;
-  salePrice?: string;
+  pet_type_id: number | null;
+  category_id: number | null;
+  subcategory_id: number | null;
+  short_description: string | null;
+  long_description: string | null;
+  has_variants: boolean;
+  regular_price: string | null;
+  sale_price: string | null;
+  quantity: number;
+  created_at: string;
+  updated_at: string;
+  
+  // Relationships
+  pet_type?: { id: number; name: string };
+  category?: { id: number; name: string };
+  subcategory?: { id: number; name: string };
+  
+  // Nested Data
   images: ProductImage[];
   variants?: ProductVariant[];
+}
+
+// Paginated Response (Same as before)
+export interface PaginatedResponse<T> {
+  current_page: number;
+  data: T[];
+  first_page_url: string;
+  from: number;
+  last_page: number;
+  last_page_url: string;
+  links: {
+    url: string | null;
+    label: string;
+    active: boolean;
+  }[];
+  next_page_url: string | null;
+  path: string;
+  per_page: number;
+  prev_page_url: string | null;
+  to: number;
+  total: number;
 }

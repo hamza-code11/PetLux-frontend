@@ -1,18 +1,31 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useCreateCategory } from "@/hooks/useCategories"; // Hook import kiya
+import { useToast } from "@/components/ui/Toast/ToastContext"; // Toast import kiya
 import styles from "./CategoryForm.module.css";
 
 export default function CategoryForm() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+
+  // Hook ka use
+  const { mutate: createCategory, isPending } = useCreateCategory();
+
+  // Memory Leak Fix: Jab component unmount ho ya image change ho, purana URL revoke karein
+  useEffect(() => {
+    return () => {
+      if (imagePreview) URL.revokeObjectURL(imagePreview);
+    };
+  }, [imagePreview]);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -23,23 +36,61 @@ export default function CategoryForm() {
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImageFile(file);
-      setImagePreview(URL.createObjectURL(file));
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select a valid image file.");
+      return;
     }
+
+    // Validate file size (Max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image size must be less than 2MB.");
+      return;
+    }
+
+    // Revoke old preview
+    if (imagePreview) URL.revokeObjectURL(imagePreview);
+
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log({ name, slug, imageFile });
-    alert("Category added successfully!");
-    router.push("/admin/categories");
+
+    if (!name.trim()) {
+      toast.error("Category Name is required.");
+      return;
+    }
+
+    if (!imageFile) {
+      toast.error("Please select an image.");
+      return;
+    }
+
+    // API Call
+    createCategory(
+      { name: name.trim(), slug, image: imageFile },
+      {
+        onSuccess: () => {
+          toast.success("Category added successfully!");
+          router.push("/admin/categories");
+        },
+        onError: (err: any) => {
+          const errorMsg = err.response?.data?.message || "Failed to create category.";
+          toast.error(errorMsg);
+        },
+      }
+    );
   };
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.formGrid}>
         <div className={styles.inputsSection}>
+          
           <div className={styles.formGroup}>
             <label className={styles.label}>Category Name</label>
             <input
@@ -49,6 +100,7 @@ export default function CategoryForm() {
               value={name}
               onChange={handleNameChange}
               required
+              disabled={isPending}
             />
           </div>
 
@@ -66,12 +118,19 @@ export default function CategoryForm() {
             <label className={styles.label}>Category Image</label>
             <input
               type="file"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/svg+xml,image/webp,image/jfif"
               ref={fileInputRef}
               onChange={handleImageChange}
               className={styles.hiddenInput}
+              disabled={isPending}
             />
-            <div className={styles.uploadBox} onClick={() => fileInputRef.current?.click()}>
+            <div
+              className={styles.uploadBox}
+              onClick={() => !isPending && fileInputRef.current?.click()}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') fileInputRef.current?.click(); }}
+            >
               <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
               </svg>
@@ -100,7 +159,9 @@ export default function CategoryForm() {
 
       <div className={styles.formActions}>
         <Link href="/admin/categories" className={styles.cancelBtn}>Cancel</Link>
-        <button type="submit" className={styles.submitBtn}>Save Category</button>
+        <button type="submit" className={styles.submitBtn} disabled={isPending}>
+          {isPending ? "Saving..." : "Save Category"}
+        </button>
       </div>
     </form>
   );

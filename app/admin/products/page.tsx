@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { PRODUCTS } from "@/data/product";
 import ProductTable from "@/components/admin/product/ProductTable";
 import styles from "./ProductPage.module.css";
 
@@ -20,7 +19,9 @@ export default function ProductsPage() {
           Add Product
         </Link>
       </div>
-      <ProductTable initialData={PRODUCTS} />
+      
+      {/* Static initialData prop hataya */}
+      <ProductTable />
     </div>
   );
 }

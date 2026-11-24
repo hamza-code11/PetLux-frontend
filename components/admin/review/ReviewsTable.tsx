@@ -1,8 +1,14 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Review } from "@/types/review";
+import { Review, ReviewStatus } from "@/types/review";
 import Pagination from "@/components/commen/Pagination";
+import {
+  useApproveReview,
+  useRejectReview,
+  useDeleteReview,
+} from "@/hooks/useAdminReviews";
+import { useToast } from "@/components/ui/Toast/ToastContext";
 import styles from "./ReviewsTable.module.css";
 
 interface Props {
@@ -10,44 +16,68 @@ interface Props {
 }
 
 export default function ReviewsTable({ initialData }: Props) {
-  const [data, setData] = useState<Review[]>(initialData);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  // Filter States
   const [searchQuery, setSearchQuery] = useState("");
   const [ratingFilter, setRatingFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
 
-  // Filter Logic
+  const { toast } = useToast();
+  const { mutate: approve, isPending: isApproving } = useApproveReview();
+  const { mutate: reject, isPending: isRejecting } = useRejectReview();
+  const { mutate: remove, isPending: isDeleting } = useDeleteReview();
+
   const filteredData = useMemo(() => {
-    return data.filter((item) => {
-      const matchesSearch = 
+    return initialData.filter((item) => {
+      const matchesSearch =
         item.productName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.userEmail.toLowerCase().includes(searchQuery.toLowerCase());
-      
-      const matchesRating = ratingFilter === "all" || item.rating === Number(ratingFilter);
 
-      return matchesSearch && matchesRating;
+      const matchesRating =
+        ratingFilter === "all" || item.rating === Number(ratingFilter);
+
+      const matchesStatus =
+        statusFilter === "all" || item.status === statusFilter;
+
+      return matchesSearch && matchesRating && matchesStatus;
     });
-  }, [data, searchQuery, ratingFilter]);
+  }, [initialData, searchQuery, ratingFilter, statusFilter]);
 
-  // Pagination Logic on Filtered Data
   const currentItems = useMemo(() => {
-    const lastItemIndex = currentPage * itemsPerPage;
-    const firstItemIndex = lastItemIndex - itemsPerPage;
-    return filteredData.slice(firstItemIndex, lastItemIndex);
+    const last = currentPage * itemsPerPage;
+    return filteredData.slice(last - itemsPerPage, last);
   }, [filteredData, currentPage, itemsPerPage]);
 
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
+  const handleApprove = (id: number) => {
+    approve(id, {
+      onSuccess: () => toast.success("Review approved."),
+      onError: () => toast.error("Failed to approve review."),
+    });
+  };
+
+  const handleReject = (id: number) => {
+    if (!confirm("Reject this review? It will be hidden from the storefront.")) return;
+    reject(id, {
+      onSuccess: () => toast.success("Review rejected."),
+      onError: () => toast.error("Failed to reject review."),
+    });
+  };
+
   const handleDelete = (id: number) => {
-    if (confirm("Are you sure you want to delete this review?")) {
-      setData((prev) => prev.filter((item) => item.id !== id));
-      if (currentItems.length === 1 && currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
-    }
+    if (!confirm("Are you sure you want to delete this review permanently?")) return;
+    remove(id, {
+      onSuccess: () => {
+        toast.success("Review deleted.");
+        if (currentItems.length === 1 && currentPage > 1) {
+          setCurrentPage(currentPage - 1);
+        }
+      },
+      onError: () => toast.error("Failed to delete review."),
+    });
   };
 
   const handleItemsPerPageChange = (limit: number) => {
@@ -57,32 +87,41 @@ export default function ReviewsTable({ initialData }: Props) {
 
   const handleFilterChange = (setter: any, value: string) => {
     setter(value);
-    setCurrentPage(1); // Reset page on filter change
+    setCurrentPage(1);
   };
 
-  const renderStars = (rating: number) => {
+  const renderStars = (rating: number) => (
+    <div className={styles.stars}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <svg
+          key={star}
+          className={star <= rating ? styles.starFilled : styles.starEmpty}
+          width="16"
+          height="16"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+        </svg>
+      ))}
+    </div>
+  );
+
+  const renderStatus = (status: ReviewStatus) => {
+    const map: Record<ReviewStatus, string> = {
+      pending: styles.statusPending,
+      approved: styles.statusApproved,
+      rejected: styles.statusRejected,
+    };
     return (
-      <div className={styles.stars}>
-        {[1, 2, 3, 4, 5].map((star) => (
-          <svg
-            key={star}
-            className={star <= rating ? styles.starFilled : styles.starEmpty}
-            width="16"
-            height="16"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-          </svg>
-        ))}
-      </div>
+      <span className={`${styles.statusBadge} ${map[status]}`}>
+        {status}
+      </span>
     );
   };
 
   return (
     <div className={styles.tableLayout}>
-      
-      {/* Filter Bar */}
       <div className={styles.filterBar}>
         <div className={styles.searchWrapper}>
           <svg className={styles.searchIcon} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -98,7 +137,18 @@ export default function ReviewsTable({ initialData }: Props) {
         </div>
 
         <div className={styles.filtersRight}>
-          <select 
+          <select
+            className={styles.filterSelect}
+            value={statusFilter}
+            onChange={(e) => handleFilterChange(setStatusFilter, e.target.value)}
+          >
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+          </select>
+
+          <select
             className={styles.filterSelect}
             value={ratingFilter}
             onChange={(e) => handleFilterChange(setRatingFilter, e.target.value)}
@@ -113,7 +163,6 @@ export default function ReviewsTable({ initialData }: Props) {
         </div>
       </div>
 
-      {/* Table */}
       <div className={styles.tableScrollArea}>
         <div className={styles.tableWrapper}>
           <table className={styles.table}>
@@ -123,6 +172,7 @@ export default function ReviewsTable({ initialData }: Props) {
                 <th>User Details</th>
                 <th>Rating</th>
                 <th>Review</th>
+                <th>Status</th>
                 <th>Date</th>
                 <th className={styles.actionsHead}>Actions</th>
               </tr>
@@ -130,7 +180,7 @@ export default function ReviewsTable({ initialData }: Props) {
             <tbody>
               {currentItems.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className={styles.emptyState}>
+                  <td colSpan={7} className={styles.emptyState}>
                     No reviews found matching your filters.
                   </td>
                 </tr>
@@ -148,13 +198,41 @@ export default function ReviewsTable({ initialData }: Props) {
                     <td>
                       <p className={styles.comment}>{item.comment}</p>
                     </td>
+                    <td>{renderStatus(item.status)}</td>
                     <td className={styles.date}>{item.date}</td>
                     <td>
                       <div className={styles.actions}>
+                        {item.status !== "approved" && (
+                          <button
+                            onClick={() => handleApprove(item.id)}
+                            disabled={isApproving}
+                            className={`${styles.iconBtn} ${styles.approveBtn}`}
+                            title="Approve"
+                          >
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </button>
+                        )}
+
+                        {item.status !== "rejected" && (
+                          <button
+                            onClick={() => handleReject(item.id)}
+                            disabled={isRejecting}
+                            className={`${styles.iconBtn} ${styles.rejectBtn}`}
+                            title="Reject"
+                          >
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        )}
+
                         <button
                           onClick={() => handleDelete(item.id)}
+                          disabled={isDeleting}
                           className={`${styles.iconBtn} ${styles.deleteBtn}`}
-                          title="Delete Review"
+                          title="Delete"
                         >
                           <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -183,3 +261,4 @@ export default function ReviewsTable({ initialData }: Props) {
     </div>
   );
 }
+

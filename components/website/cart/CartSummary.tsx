@@ -1,13 +1,20 @@
+"use client";
+
 import Link from "next/link";
-import { Product } from "@/data/products";
+import { useCart } from "@/hooks/useCart";
+import { CartItem as CartItemType } from "@/types/cart";
 import styles from "./CartSummary.module.css";
 
-export default function CartSummary({ items }: { items: Product[] }) {
-  // Dummy Calculations (Aap real logic laga sakte hain)
-  const subtotal = 120.00;
-  const shipping = 10.00;
-  const tax = 8.00;
-  const total = subtotal + shipping + tax;
+interface Props {
+  items: CartItemType[];
+}
+
+export default function CartSummary({ items }: Props) {
+  const { totalPrice } = useCart();
+
+  if (items.length === 0) return null;
+
+  const total = totalPrice; // Sirf total price, koi tax/shipping nahi
 
   return (
     <div className={styles.summary}>
@@ -15,15 +22,7 @@ export default function CartSummary({ items }: { items: Product[] }) {
       
       <div className={styles.row}>
         <span>Subtotal</span>
-        <span>${subtotal.toFixed(2)}</span>
-      </div>
-      <div className={styles.row}>
-        <span>Shipping</span>
-        <span>${shipping.toFixed(2)}</span>
-      </div>
-      <div className={styles.row}>
-        <span>Tax</span>
-        <span>${tax.toFixed(2)}</span>
+        <span>${total.toFixed(2)}</span>
       </div>
       
       <div className={styles.divider} />

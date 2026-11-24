@@ -27,44 +27,126 @@
   transform: scale(1.05);
 }
 
+/* ---------- Variant Dropdown (Top Right) ---------- */
+.variantDropdownWrapper {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+.variantToggleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--color-white);
+  color: var(--color-black);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+:global(.dark) .variantToggleBtn {
+  background: var(--color-gray-800);
+  color: var(--color-white);
+  border-color: var(--color-gray-700);
+}
+
+.variantToggleBtn:hover {
+  transform: scale(1.05);
+}
+
+.variantDropdownMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 140px;
+  max-height: 200px;
+  overflow-y: auto;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 20;
+}
+
+.variantItem {
+  width: 100%;
+  padding: 8px 12px;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  color: var(--color-foreground);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.variantItem:hover {
+  background: var(--color-gray-100);
+}
+
+:global(.dark) .variantItem:hover {
+  background: var(--color-gray-800);
+}
+
+.variantItemActive {
+  background: var(--color-gray-100);
+  font-weight: var(--font-semibold);
+}
+
+:global(.dark) .variantItemActive {
+  background: var(--color-gray-800);
+}
+
 /* ---------- Hover Actions Menu ---------- */
 .actionsMenu {
   position: absolute;
-  top: 10px;
+  bottom: 10px; /* Image ke neeche ki taraf */
   right: 10px;
   display: flex;
   flex-direction: column;
   gap: 6px;
   opacity: 0;
-  transform: translateX(20px);
+  transform: translateY(10px); /* Neeche se upar aane ka effect */
   transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 2;
+  z-index: 5;
 }
 
 .productCard:hover .actionsMenu {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
 }
 
 .actionBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 34px; 
-  height: 34px;
+  width: 36px; 
+  height: 36px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(4px);
   color: var(--color-black);
-  border: none;
+  border: 1px solid var(--color-border);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
   transition: all 0.2s ease;
 }
 
 :global(.dark) .actionBtn {
-  background: rgba(30, 30, 30, 0.85);
+  background: rgba(30, 30, 30, 0.95);
   color: var(--color-white);
+  border-color: var(--color-gray-700);
 }
 
 .actionBtn:hover {
@@ -91,6 +173,7 @@
   color: var(--color-foreground);
   margin: 0;
   line-height: 1.4;
+  /* Ek line me rakhein, overflow par ... */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -110,3 +193,22 @@
   margin-left: 8px;
   font-weight: normal;
 }
+
+
+
+
+
+
+/* ProductCard.module.css me add karein */
+
+.activeWishlist {
+  background: #ef4444 !important; /* Red color */
+  color: white !important;
+  border-color: #ef4444 !important;
+}
+
+.activeWishlist:hover {
+  background: #dc2626 !important;
+  color: white !important;
+}
+

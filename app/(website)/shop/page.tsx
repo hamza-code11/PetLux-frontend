@@ -3,6 +3,11 @@ import ShopSidebar from "@/components/website/shop/ShopSidebar";
 import ShopProductGrid from "@/components/website/shop/ShopProductGrid";
 import styles from "./shop.module.css";
 
+export const metadata = {
+  title: "Shop All Products | PetLux",
+  description: "Browse premium pet food, toys, and accessories.",
+};
+
 export default function ShopPage() {
   return (
     <div className={styles.page}>

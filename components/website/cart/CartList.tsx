@@ -1,11 +1,13 @@
-import { Product } from "@/data/products";
+"use client";
+
+import { CartItem as CartItemType } from "@/types/cart";
 import CartItem from "./CartItem";
 import styles from "./CartList.module.css";
 
 interface Props {
-  items: Product[];
-  onRemoveItem: (id: number) => void;
-  onUpdateQuantity: (id: number, newQuantity: number) => void;
+  items: CartItemType[];
+  onRemoveItem: (productId: number, variantId?: number) => void;
+  onUpdateQuantity: (productId: number, quantity: number, variantId?: number) => void;
 }
 
 export default function CartList({ items, onRemoveItem, onUpdateQuantity }: Props) {
@@ -13,10 +15,10 @@ export default function CartList({ items, onRemoveItem, onUpdateQuantity }: Prop
     <div className={styles.list}>
       {items.map((item) => (
         <CartItem 
-          key={item.id} 
-          product={item} 
-          onRemove={() => onRemoveItem(item.id)}
-          onUpdateQuantity={(qty) => onUpdateQuantity(item.id, qty)}
+          key={`${item.product.id}-${item.variant?.id || 'no-variant'}`} 
+          item={item}
+          onRemove={() => onRemoveItem(item.product.id, item.variant?.id)}
+          onUpdateQuantity={(qty) => onUpdateQuantity(item.product.id, qty, item.variant?.id)}
         />
       ))}
     </div>

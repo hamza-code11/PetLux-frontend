@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { SUBCATEGORIES } from "@/data/subcategory";
 import SubcategoryTable from "@/components/admin/subcategory/SubcategoryTable";
 import styles from "./SubcategoryPage.module.css";
 
@@ -27,9 +26,9 @@ export default function SubcategoriesPage() {
         </Link>
       </div>
 
-      <SubcategoryTable initialData={SUBCATEGORIES} />
+      {/* Static data prop hatadiya, ab component khud fetch karega */}
+      <SubcategoryTable />
 
     </div>
   );
 }
-

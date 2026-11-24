@@ -11,12 +11,31 @@ export const metadata = {
 };
 
 export default async function EditPetTypePage({ params }: Props) {
-  // Promise ko unwrap (await) karein
   const { id } = await params;
+  const numericId = Number(id);
+
+  // Agar ID invalid hai (NaN), toh user ko error dikhayein
+  if (isNaN(numericId)) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div>
+            <h1 className={styles.title}>Invalid Pet Type ID</h1>
+            <p className={styles.subtitle}>The requested pet type does not exist.</p>
+          </div>
+          <Link href="/admin/petTypes" className={styles.backBtn}>
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Back to List
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
-      {/* Header Box */}
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>Edit Pet Type</h1>
@@ -32,8 +51,8 @@ export default async function EditPetTypePage({ params }: Props) {
         </Link>
       </div>
 
-      {/* Form Component - Yahan ID pass karein */}
-      <EditPetTypeForm id={Number(id)} />
+      <EditPetTypeForm id={numericId} />
     </div>
   );
 }
+

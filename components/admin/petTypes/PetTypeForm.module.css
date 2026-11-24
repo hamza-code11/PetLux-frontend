@@ -76,6 +76,8 @@
   display: none;
 }
 
+
+
 .uploadBox {
   display: flex;
   flex-direction: column;
@@ -97,10 +99,19 @@
   color: var(--color-foreground);
 }
 
+.uploadBox svg {
+  color: var(--color-muted);
+}
+.uploadBox:hover svg {
+  color: var(--color-foreground);
+}
+
 .uploadBox span {
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
 }
+
+
 
 .fileName {
   font-size: var(--text-xs) !important;

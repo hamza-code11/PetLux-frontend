@@ -2,54 +2,57 @@
 
 import Link from "next/link";
 import { useState, useMemo } from "react";
-import { Product } from "@/types/product";
+import { useGetProducts, useDeleteProduct } from "@/hooks/useProducts";
 import Pagination from "@/components/commen/Pagination";
+import { useToast } from "@/components/ui/Toast/ToastContext";
 import styles from "./ProductTable.module.css";
 
-interface Props {
-  initialData: Product[];
-}
-
-export default function ProductTable({ initialData }: Props) {
-  const [data, setData] = useState<Product[]>(initialData);
+export default function ProductTable() {
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  
-  // Filter States
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
+
+  const { toast } = useToast();
+
+  // Hooks
+  const { data, isLoading } = useGetProducts(currentPage, itemsPerPage);
+  const { mutate: deleteProduct } = useDeleteProduct();
+
+  // Filters (Client-side on current page)
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
 
-  // Filtering Logic
   const filteredData = useMemo(() => {
-    return data.filter((item) => {
+    if (!data?.data) return [];
+    return data.data.filter((item) => {
       const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesStatus = statusFilter === "all" || item.status === statusFilter;
       
       let matchesType = true;
-      if (typeFilter === "simple") matchesType = !item.hasVariants;
-      if (typeFilter === "variants") matchesType = item.hasVariants;
+      if (typeFilter === "simple") matchesType = !item.has_variants;
+      if (typeFilter === "variants") matchesType = item.has_variants;
 
       return matchesSearch && matchesStatus && matchesType;
     });
   }, [data, searchQuery, statusFilter, typeFilter]);
 
-  // Pagination Logic on Filtered Data
-  const currentItems = useMemo(() => {
-    const lastItemIndex = currentPage * itemsPerPage;
-    const firstItemIndex = lastItemIndex - itemsPerPage;
-    return filteredData.slice(firstItemIndex, lastItemIndex);
-  }, [filteredData, currentPage, itemsPerPage]);
-
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
-  const handleDelete = (id?: number) => {
-    if (!id) return;
+  const handleDelete = (id: number) => {
     if (confirm("Are you sure you want to delete this product?")) {
-      setData((prev) => prev.filter((item) => item.id !== id));
-      if (currentItems.length === 1 && currentPage > 1) {
-        setCurrentPage(currentPage - 1);
-      }
+      setDeletingId(id);
+      deleteProduct(id, {
+        onSuccess: () => {
+          toast.success("Product deleted successfully!");
+          if (filteredData.length === 1 && currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+          }
+          setDeletingId(null);
+        },
+        onError: () => {
+          toast.error("Failed to delete product.");
+          setDeletingId(null);
+        },
+      });
     }
   };
 
@@ -58,10 +61,8 @@ export default function ProductTable({ initialData }: Props) {
     setCurrentPage(1);
   };
 
-  // Reset Page on Filter Change
   const handleFilterChange = (setter: any, value: string) => {
     setter(value);
-    setCurrentPage(1);
   };
 
   return (
@@ -79,6 +80,7 @@ export default function ProductTable({ initialData }: Props) {
             className={styles.searchInput}
             value={searchQuery}
             onChange={(e) => handleFilterChange(setSearchQuery, e.target.value)}
+            disabled={isLoading}
           />
         </div>
 
@@ -87,6 +89,7 @@ export default function ProductTable({ initialData }: Props) {
             className={styles.filterSelect}
             value={statusFilter}
             onChange={(e) => handleFilterChange(setStatusFilter, e.target.value)}
+            disabled={isLoading}
           >
             <option value="all">All Status</option>
             <option value="publish">Published</option>
@@ -97,6 +100,7 @@ export default function ProductTable({ initialData }: Props) {
             className={styles.filterSelect}
             value={typeFilter}
             onChange={(e) => handleFilterChange(setTypeFilter, e.target.value)}
+            disabled={isLoading}
           >
             <option value="all">All Types</option>
             <option value="simple">Simple</option>
@@ -119,84 +123,97 @@ export default function ProductTable({ initialData }: Props) {
               </tr>
             </thead>
             <tbody>
-              {currentItems.length === 0 ? (
+              {isLoading ? (
+                <tr>
+                  <td colSpan={5} className={styles.emptyState}>Loading products...</td>
+                </tr>
+              ) : filteredData.length === 0 ? (
                 <tr>
                   <td colSpan={5} className={styles.emptyState}>
-                    No products found matching your filters.
+                    {data?.data.length === 0 ? "No products found. Add a new product." : "No products match your filters."}
                   </td>
                 </tr>
               ) : (
-                currentItems.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <div className={styles.nameCol}>
-                        {item.name}
-                        {item.hasVariants && (
-                          <span className={styles.typeBadge}>Variants</span>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <div className={styles.categoryInfo}>
-                        <span>{item.petType}</span>
-                        <span className={styles.subText}>
-                          {item.category} / {item.subcategory}
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      {item.hasVariants ? (
-                        <span className={styles.variantText}>
-                          {item.variants?.length} Variants
-                        </span>
-                      ) : (
-                        <div className={styles.priceInfo}>
-                          <span className={styles.salePrice}>
-                            ${item.salePrice || item.regularPrice}
-                          </span>
-                          {item.salePrice && item.regularPrice && item.salePrice !== item.regularPrice && (
-                            <span className={styles.regularPrice}>
-                              ${item.regularPrice}
-                            </span>
+                filteredData.map((item) => {
+                  const isRowDeleting = deletingId === item.id;
+                  
+                  return (
+                    <tr key={item.id}>
+                      <td>
+                        <div className={styles.nameCol}>
+                          {item.name}
+                          {item.has_variants && (
+                            <span className={styles.typeBadge}>Variants</span>
                           )}
                         </div>
-                      )}
-                    </td>
-                    <td>
-                      <span
-                        className={`${styles.statusBadge} ${
-                          item.status === "publish"
-                            ? styles.statusPublished
-                            : styles.statusDraft
-                        }`}
-                      >
-                        {item.status === "publish" ? "Published" : "Draft"}
-                      </span>
-                    </td>
-                    <td>
-                      <div className={styles.actions}>
-                        <Link
-                          href={`/admin/products/edit/${item.id}`}
-                          className={styles.iconBtn}
-                          title="Edit"
+                      </td>
+                      <td>
+                        <div className={styles.categoryInfo}>
+                          <span>{item.pet_type?.name || "N/A"}</span>
+                          <span className={styles.subText}>
+                            {item.category?.name || "-"} {item.subcategory?.name ? `/ ${item.subcategory.name}` : ""}
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        {item.has_variants ? (
+                          <span className={styles.variantText}>
+                            {item.variants?.length || 0} Variants
+                          </span>
+                        ) : (
+                          <div className={styles.priceInfo}>
+                            <span className={styles.salePrice}>
+                              ${item.sale_price || item.regular_price}
+                            </span>
+                            {item.sale_price && item.regular_price && item.sale_price !== item.regular_price && (
+                              <span className={styles.regularPrice}>
+                                ${item.regular_price}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </td>
+                      <td>
+                        <span
+                          className={`${styles.statusBadge} ${
+                            item.status === "publish"
+                              ? styles.statusPublished
+                              : styles.statusDraft
+                          }`}
                         >
-                          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className={`${styles.iconBtn} ${styles.deleteBtn}`}
-                          title="Delete"
-                        >
-                          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                          {item.status === "publish" ? "Published" : "Draft"}
+                        </span>
+                      </td>
+                      <td>
+                        <div className={styles.actions}>
+                          <Link
+                            href={`/admin/products/edit/${item.id}`}
+                            className={styles.iconBtn}
+                            title="Edit"
+                          >
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(item.id)}
+                            className={`${styles.iconBtn} ${styles.deleteBtn}`}
+                            title="Delete"
+                            disabled={isRowDeleting}
+                          >
+                            {isRowDeleting ? (
+                              <span style={{ fontSize: '12px' }}>...</span>
+                            ) : (
+                              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            )}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -204,16 +221,18 @@ export default function ProductTable({ initialData }: Props) {
       </div>
 
       {/* Pagination */}
-      <div className={styles.paginationWrapper}>
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={filteredData.length}
-          itemsPerPage={itemsPerPage}
-          onPageChange={setCurrentPage}
-          onItemsPerPageChange={handleItemsPerPageChange}
-        />
-      </div>
+      {!isLoading && data && data.data.length > 0 && (
+        <div className={styles.paginationWrapper}>
+          <Pagination
+            currentPage={data.current_page}
+            totalPages={data.last_page}
+            totalItems={data.total}
+            itemsPerPage={data.per_page}
+            onPageChange={setCurrentPage}
+            onItemsPerPageChange={handleItemsPerPageChange}
+          />
+        </div>
+      )}
     </div>
   );
 }

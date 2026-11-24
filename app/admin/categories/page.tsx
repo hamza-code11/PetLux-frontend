@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { CATEGORIES } from "@/data/category";
 import CategoryTable from "@/components/admin/category/CategoryTable";
 import styles from "./CategoryPage.module.css";
 
@@ -27,9 +26,9 @@ export default function CategoriesPage() {
         </Link>
       </div>
 
-      <CategoryTable initialData={CATEGORIES} />
+      {/* Static data prop hatadiya, ab component khud fetch karega */}
+      <CategoryTable />
 
     </div>
   );
 }
-

@@ -1,44 +1,61 @@
-// // hooks/useWishlist.ts
-// 'use client';
+'use client';
 
-// import { useEffect, useState } from 'react';
-// import { Product } from '@/types/Product';
-// import {
-//   getWishlist,
-//   toggleWishlist as toggleWishlistUtil,
-//   clearWishlist as clearWishlistUtil,
-//   WishlistItem,
-// } from '@/utils/cart';
+import { useEffect, useState } from 'react';
+import { ShopProduct, ShopProductVariant } from '@/types/shop';
+import { WishlistItem } from '@/types/cart';
+import {
+  getWishlist,
+  toggleWishlist as toggleWishlistUtil,
+  clearWishlist as clearWishlistUtil,
+  updateWishlistVariant, // Naya import
+} from '@/utils/cart';
 
-// export function useWishlist() {
-//   const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+export function useWishlist() {
+  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+  const [isMounted, setIsMounted] = useState(false);
 
-//   useEffect(() => {
-//     setWishlist(getWishlist());
+  useEffect(() => {
+    setIsMounted(true);
+    setWishlist(getWishlist());
 
-//     const handler = (e: Event) => {
-//       const detail = (e as CustomEvent<WishlistItem[]>).detail;
-//       setWishlist(detail);
-//     };
-//     window.addEventListener('wishlist:updated', handler);
-//     return () => window.removeEventListener('wishlist:updated', handler);
-//   }, []);
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<WishlistItem[]>).detail;
+      setWishlist(detail);
+    };
+    window.addEventListener('wishlist:updated', handler);
+    return () => window.removeEventListener('wishlist:updated', handler);
+  }, []);
 
-//   const toggle = (
-//     product: Product,
-//     options?: { color?: string; size?: string }
-//   ) => {
-//     const next = toggleWishlistUtil(product, options);
-//     setWishlist(next);
-//   };
+  const toggle = (
+    product: ShopProduct,
+    variant?: ShopProductVariant
+  ) => {
+    const next = toggleWishlistUtil(product, variant);
+    setWishlist(next);
+  };
 
-//   const clearWishlist = () => {
-//     clearWishlistUtil();
-//     setWishlist([]);
-//   };
+  const clearWishlist = () => {
+    clearWishlistUtil();
+    setWishlist([]);
+  };
 
-//   const has = (productId: number) =>
-//     wishlist.some((item) => item.product.id === productId);
+  const has = (productId: number, variantId?: number) =>
+    wishlist.some(
+      (item) =>
+        item.product.id === productId &&
+        item.variant?.id === variantId
+    );
 
-//   return { wishlist, toggle, has, clearWishlist };
-// }
+  // Naya function: Variant change (position preserve)
+  const changeVariant = (
+    productId: number,
+    oldVariantId: number | undefined,
+    newVariant: ShopProductVariant
+  ) => {
+    const next = updateWishlistVariant(productId, oldVariantId, newVariant);
+    setWishlist(next);
+  };
+
+  return { wishlist, isMounted, toggle, has, clearWishlist, changeVariant };
+}
+

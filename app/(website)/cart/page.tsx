@@ -1,28 +1,25 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { PRODUCTS } from "@/data/products";
+import { useCart } from "@/hooks/useCart";
 import CartList from "@/components/website/cart/CartList";
 import CartSummary from "@/components/website/cart/CartSummary";
+import CartSkeleton from "@/components/website/skeleton/cartskeleton/CartSkeleton"; // Skeleton import
 import styles from "./cart.module.css";
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState(PRODUCTS.slice(0, 2));
+  const { cart, isMounted, removeItem, updateQuantity } = useCart();
 
-  const removeItem = (id: number) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
-  };
+  // Hydration fix: Skeleton dikhayein
+  if (!isMounted) {
+    return <CartSkeleton />;
+  }
 
   return (
     <div className={styles.page}>
       <div className={styles.container}>
         
-        {/* HEADER - Ab Wishlist jaisa boxed hai */}
+        {/* HEADER */}
         <div className={styles.header}>
           <nav className={styles.breadcrumbs} aria-label="Breadcrumb">
             <Link href="/">Home</Link>
@@ -34,13 +31,13 @@ export default function CartPage() {
             <div className={styles.titleLeft}>
               <h1 className={styles.title}>Shopping Cart</h1>
               <p className={styles.subtitle}>
-                <span className={styles.count}>{cartItems.length}</span> {cartItems.length === 1 ? "item" : "items"} in your cart
+                <span className={styles.count}>{cart.length}</span> {cart.length === 1 ? "item" : "items"} in your cart
               </p>
             </div>
           </div>
         </div>
 
-        {cartItems.length === 0 ? (
+        {cart.length === 0 ? (
           <div className={styles.emptyState}>
             <h2>Your cart is empty</h2>
             <p>Looks like you haven't added anything yet.</p>
@@ -52,14 +49,14 @@ export default function CartPage() {
           <div className={styles.layout}>
             <div className={styles.itemsSection}>
               <CartList 
-                items={cartItems} 
+                items={cart} 
                 onRemoveItem={removeItem} 
                 onUpdateQuantity={updateQuantity}
               />
             </div>
 
             <div className={styles.summarySection}>
-              <CartSummary items={cartItems} />
+              <CartSummary items={cart} />
             </div>
           </div>
         )}
@@ -68,4 +65,3 @@ export default function CartPage() {
     </div>
   );
 }
-

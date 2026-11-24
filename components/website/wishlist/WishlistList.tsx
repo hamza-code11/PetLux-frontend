@@ -1,10 +1,12 @@
-import { Product } from "@/data/products";
+"use client";
+
+import { WishlistItem as WishlistItemType } from "@/types/cart";
 import WishlistItem from "./WishlistItem";
 import styles from "./WishlistList.module.css";
 
 interface Props {
-  items: Product[];
-  onRemoveItem: (id: number) => void;
+  items: WishlistItemType[];
+  onRemoveItem: (productId: number, variantId?: number) => void;
 }
 
 export default function WishlistList({ items, onRemoveItem }: Props) {
@@ -12,9 +14,9 @@ export default function WishlistList({ items, onRemoveItem }: Props) {
     <div className={styles.listWrapper}>
       {items.map((item) => (
         <WishlistItem 
-          key={item.id} 
-          product={item} 
-          onRemove={() => onRemoveItem(item.id)} 
+          key={`${item.product.id}-${item.variant?.id || 'no-variant'}`} 
+          item={item} 
+          onRemove={() => onRemoveItem(item.product.id, item.variant?.id)} 
         />
       ))}
     </div>

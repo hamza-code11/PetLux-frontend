@@ -1,7 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 
-import { getMenu } from "@/data/menu";
+import { useMenu } from "@/hooks/useMenu";
 import styles from "./footer.module.css";
 
 const socials = [
@@ -36,8 +38,8 @@ const socials = [
   },
 ];
 
-export default async function Footer() {
-  const menu = await getMenu();
+export default function Footer() {
+  const { data: menu = [], isLoading } = useMenu();
 
   return (
     <footer className={styles.footer}>
@@ -77,11 +79,15 @@ export default async function Footer() {
 
         <div className={styles.column}>
           <h3>Shop by Pet</h3>
-          {menu.map((pet) => (
-            <Link key={pet.id} href={`/shop/${pet.slug}`}>
-              {pet.name}
-            </Link>
-          ))}
+          {isLoading ? (
+            <span className={styles.loadingText}>Loading...</span>
+          ) : (
+            menu.map((pet: any) => (
+              <Link key={pet.id} href={`/shop/${pet.slug}`}>
+                {pet.name}
+              </Link>
+            ))
+          )}
           <Link href="/brands">Brands</Link>
         </div>
 

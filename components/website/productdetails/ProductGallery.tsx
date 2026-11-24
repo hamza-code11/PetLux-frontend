@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { isLocalImage } from "@/lib/imageUrl"; // Helper import karein
 import styles from "./ProductGallery.module.css";
 
 interface Props {
@@ -29,7 +30,13 @@ export default function ProductGallery({ images, name }: Props) {
             className={`${styles.thumbBtn} ${activeImage === img ? styles.active : ""}`}
             onClick={() => setActiveImage(img)}
           >
-            <Image src={img} alt={`${name} thumbnail ${idx + 1}`} fill className={styles.thumbImage} />
+            <Image 
+              src={img} 
+              alt={`${name} thumbnail ${idx + 1}`} 
+              fill 
+              className={styles.thumbImage} 
+              unoptimized={isLocalImage(img)} // <-- YEH ADD KAREIN
+            />
           </button>
         ))}
       </div>
@@ -41,6 +48,7 @@ export default function ProductGallery({ images, name }: Props) {
           fill
           sizes="(max-width: 900px) 100vw, 50vw"
           className={styles.mainImage}
+          unoptimized={isLocalImage(activeImage)} // <-- YEH ADD KAREIN
         />
       </div>
     </div>

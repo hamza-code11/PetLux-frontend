@@ -1,121 +1,218 @@
-// 'use client';
+import { ShopProduct, ShopProductVariant } from '@/types/shop';
+import { CartItem, WishlistItem } from '@/types/cart';
 
-// import { Product } from '@/types/Product';
+const CART_KEY = 'petlux_cart';
+const WISHLIST_KEY = 'petlux_wishlist';
 
-// export interface CartItem {
-//   product: Product;
-//   quantity: number;
-//   color?: string;
-//   size?: string;
-// }
+/* ---------- CART ---------- */
 
-// export interface WishlistItem {
-//   product: Product;
-//   color?: string;
-//   size?: string;
-// }
+export function getCart(): CartItem[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
 
-// const CART_KEY = 'oneplusone_cart';
-// const WISHLIST_KEY = 'oneplusone_wishlist';
+export function saveCart(cart: CartItem[]) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
+}
 
-// /* ---------- CART ---------- */
+export function addToCart(
+  product: ShopProduct,
+  quantity: number = 1,
+  variant?: ShopProductVariant
+): CartItem[] {
+  const cart = getCart();
 
-// export function getCart(): CartItem[] {
-//   if (typeof window === 'undefined') return [];
-//   try {
-//     return JSON.parse(localStorage.getItem(CART_KEY) || '[]');
-//   } catch {
-//     return [];
-//   }
-// }
+  const existingIndex = cart.findIndex(
+    (item) =>
+      item.product.id === product.id &&
+      item.variant?.id === variant?.id
+  );
 
-// export function saveCart(cart: CartItem[]) {
-//   if (typeof window === 'undefined') return;
-//   localStorage.setItem(CART_KEY, JSON.stringify(cart));
-//   window.dispatchEvent(new CustomEvent('cart:updated', { detail: cart }));
-// }
+  if (existingIndex > -1) {
+    cart[existingIndex].quantity += quantity;
+  } else {
+    cart.push({ product, quantity, variant });
+  }
 
-// export function addToCart(
-//   product: Product,
-//   quantity: number = 1,
-//   options?: { color?: string; size?: string }
-// ) {
-//   const cart = getCart();
+  saveCart(cart);
+  return cart;
+}
 
-//   const color = options?.color ?? product.colors?.[0]?.name;
-//   const size = options?.size ?? product.sizes?.[0]?.size;  // ✅ FIX
+export function removeFromCart(
+  productId: number,
+  variantId?: number
+): CartItem[] {
+  const cart = getCart().filter(
+    (item) =>
+      !(
+        item.product.id === productId &&
+        item.variant?.id === variantId
+      )
+  );
+  saveCart(cart);
+  return cart;
+}
 
-//   const existingIndex = cart.findIndex(
-//     (item) =>
-//       item.product.id === product.id &&
-//       item.color === color &&
-//       item.size === size
-//   );
+export function updateCartQuantity(
+  productId: number,
+  quantity: number,
+  variantId?: number
+): CartItem[] {
+  if (quantity < 1) {
+    return removeFromCart(productId, variantId);
+  }
 
-//   if (existingIndex > -1) {
-//     cart[existingIndex].quantity += quantity;
-//   } else {
-//     cart.push({ product, quantity, color, size });
-//   }
+  const cart = getCart().map((item) => {
+    if (
+      item.product.id === productId &&
+      item.variant?.id === variantId
+    ) {
+      return { ...item, quantity };
+    }
+    return item;
+  });
 
-//   saveCart(cart);
-//   return cart;
-// }
+  saveCart(cart);
+  return cart;
+}
 
-// export function removeFromCart(
-//   productId: number,
-//   options?: { color?: string; size?: string }
-// ) {
-//   const cart = getCart().filter(
-//     (item) =>
-//       !(
-//         item.product.id === productId &&
-//         item.color === options?.color &&
-//         item.size === options?.size
-//       )
-//   );
-//   saveCart(cart);
-//   return cart;
-// }
+// FIX: Variant change karte waqt item ki position preserve karein
+export function updateCartVariant(
+  productId: number,
+  oldVariantId: number | undefined,
+  newVariant: ShopProductVariant
+): CartItem[] {
+  const cart = getCart();
+  
+  // Purana item ka index dhundhein
+  const index = cart.findIndex(
+    (item) =>
+      item.product.id === productId &&
+      item.variant?.id === oldVariantId
+  );
 
-// /* ---------- WISHLIST ---------- */
+  if (index === -1) return cart;
 
-// export function getWishlist(): WishlistItem[] {
-//   if (typeof window === 'undefined') return [];
-//   try {
-//     return JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]');
-//   } catch {
-//     return [];
-//   }
-// }
+  // Check karein ki naya variant pehle se cart me hai ya nahi
+  const existingNewIndex = cart.findIndex(
+    (item) =>
+      item.product.id === productId &&
+      item.variant?.id === newVariant.id
+  );
 
-// export function saveWishlist(items: WishlistItem[]) {
-//   if (typeof window === 'undefined') return;
-//   localStorage.setItem(WISHLIST_KEY, JSON.stringify(items));
-//   window.dispatchEvent(new CustomEvent('wishlist:updated', { detail: items }));
-// }
+  if (existingNewIndex > -1) {
+    // Agar naya variant already cart me hai, toh quantity merge karein aur purana remove karein
+    cart[existingNewIndex].quantity += cart[index].quantity;
+    cart.splice(index, 1);
+  } else {
+    // Nahi hai, toh same index par variant update karein (position preserve)
+    cart[index] = { ...cart[index], variant: newVariant };
+  }
 
-// export function toggleWishlist(
-//   product: Product,
-//   options?: { color?: string; size?: string }
-// ): WishlistItem[] {
-//   const current = getWishlist();
-//   const exists = current.some((item) => item.product.id === product.id);
+  saveCart(cart);
+  return cart;
+}
 
-//   let next: WishlistItem[];
+/* ---------- WISHLIST ---------- */
+// ... (same as before)
+export function getWishlist(): WishlistItem[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    return JSON.parse(localStorage.getItem(WISHLIST_KEY) || '[]');
+  } catch {
+    return [];
+  }
+}
 
-//   if (exists) {
-//     next = current.filter((item) => item.product.id !== product.id);
-//   } else {
-//     const color = options?.color ?? product.colors?.[0]?.name;
-//     const size = options?.size ?? product.sizes?.[0]?.size;  // ✅ FIX
-//     next = [...current, { product, color, size }];
-//   }
+export function saveWishlist(items: WishlistItem[]) {
+  if (typeof window === 'undefined') return;
+  localStorage.setItem(WISHLIST_KEY, JSON.stringify(items));
+  window.dispatchEvent(new CustomEvent('wishlist:updated', { detail: items }));
+}
 
-//   saveWishlist(next);
-//   return next;
-// }
+export function toggleWishlist(
+  product: ShopProduct,
+  variant?: ShopProductVariant
+): WishlistItem[] {
+  const current = getWishlist();
+  const exists = current.some(
+    (item) =>
+      item.product.id === product.id &&
+      item.variant?.id === variant?.id
+  );
 
-// export function clearWishlist() {
-//   saveWishlist([]);
-// }
+  let next: WishlistItem[];
+
+  if (exists) {
+    next = current.filter(
+      (item) =>
+        !(
+          item.product.id === product.id &&
+          item.variant?.id === variant?.id
+        )
+    );
+  } else {
+    next = [...current, { product, variant }];
+  }
+
+  saveWishlist(next);
+  return next;
+}
+
+export function clearWishlist() {
+  saveWishlist([]);
+}
+
+
+
+
+
+
+
+
+
+
+
+// FIX: Wishlist me variant change karte waqt position preserve karein
+export function updateWishlistVariant(
+  productId: number,
+  oldVariantId: number | undefined,
+  newVariant: ShopProductVariant
+): WishlistItem[] {
+  const wishlist = getWishlist();
+  
+  // Purana item ka index dhundhein
+  const index = wishlist.findIndex(
+    (item) =>
+      item.product.id === productId &&
+      item.variant?.id === oldVariantId
+  );
+
+  if (index === -1) return wishlist;
+
+  // Check karein ki naya variant pehle se wishlist me hai ya nahi
+  const existingNewIndex = wishlist.findIndex(
+    (item) =>
+      item.product.id === productId &&
+      item.variant?.id === newVariant.id
+  );
+
+  if (existingNewIndex > -1) {
+    // Agar naya variant already wishlist me hai, toh purana remove karein (duplicate se bachne ke liye)
+    wishlist.splice(index, 1);
+  } else {
+    // Nahi hai, toh same index par variant update karein (position preserve)
+    wishlist[index] = { ...wishlist[index], variant: newVariant };
+  }
+
+  saveWishlist(wishlist);
+  return wishlist;
+}
+
+

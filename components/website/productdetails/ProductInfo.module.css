@@ -103,6 +103,9 @@
 }
 
 /* 4. Variants */
+/* ... (baaki CSS same rahegi) ... */
+
+/* 4. Variants Section */
 .variantsSection {
   display: flex;
   flex-direction: column;
@@ -116,57 +119,74 @@
   color: var(--color-foreground);
 }
 
+/* Variant List: Flexbox with wrap to handle multiple rows */
 .variantList {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
+/* Variant Button: Width barhai hai */
 .variantBtn {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 12px 16px;
+  padding: 10px 14px;
   background: transparent;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 90px;
+  min-width: 180px; /* Width barha di taaki ek row me 3 aa sakein */
+  flex: 1 1 180px; /* Flexible width: grow, shrink, basis */
+  max-width: 220px; /* Max width taaki zyada na phailen */
 }
 
 .variantBtn:hover {
   border-color: var(--color-gray-400);
 }
 
-/* Variant ka Name */
 .variantName {
   font-size: var(--text-sm);
   font-weight: var(--font-semibold);
   color: var(--color-foreground);
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
-/* Variant ka Price */
 .variantPrice {
   font-size: var(--text-sm);
   font-weight: var(--font-medium);
   color: var(--color-muted);
 }
 
-/* Active Variant State */
+/* Naya: Variant Description ke liye chota text */
+.variantDesc {
+  font-size: 11px;
+  color: var(--color-muted);
+  margin-top: 4px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Max 2 lines dikhayega */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .activeVariant {
   border-color: var(--color-foreground);
   background: var(--color-surface);
 }
 
-.activeVariant .variantName {
-  color: var(--color-foreground);
-}
-
+.activeVariant .variantName,
 .activeVariant .variantPrice {
   color: var(--color-foreground);
 }
+
+.activeVariant .variantDesc {
+  color: var(--color-foreground); /* Active state me description bhi dark */
+}
+
+
 
 /* 5. Actions */
 .actions {

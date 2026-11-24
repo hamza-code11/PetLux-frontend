@@ -1,54 +1,86 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Product, ProductVariant } from "@/data/products";
+import { getImageUrl, isLocalImage } from "@/lib/imageUrl";
+import { useCart } from "@/hooks/useCart";
+import { useToast } from "@/components/ui/Toast/ToastContext";
+import { CartItem as CartItemType } from "@/types/cart";
 import styles from "./CartItem.module.css";
 
 interface Props {
-  product: Product;
+  item: CartItemType;
   onRemove: () => void;
   onUpdateQuantity: (qty: number) => void;
 }
 
-export default function CartItem({ product, onRemove, onUpdateQuantity }: Props) {
-  const [quantity, setQuantity] = useState(1);
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
-    product.variants ? product.variants[0] : null
-  );
+export default function CartItem({ item, onRemove, onUpdateQuantity }: Props) {
+  const { product, variant, quantity } = item;
+  const { changeVariant } = useCart(); // Naya function
+  const { toast } = useToast();
 
-  const currentPrice = selectedVariant ? selectedVariant.price : product.displayPrice;
+  // --- Price Calculation ---
+  let currentPrice = 0;
+  if (variant) {
+    currentPrice = Number(variant.sale_price || variant.regular_price);
+  } else {
+    currentPrice = Number(product.sale_price || product.regular_price || 0);
+  }
+
+  // --- Image Calculation ---
+  let imageUrl = "/placeholder.jpeg";
+  let imageFound = false;
+
+  if (variant && variant.images?.length > 0) {
+    const imgPath = variant.images[0].image_path || variant.images[0].image_url;
+    if (imgPath) {
+      imageUrl = getImageUrl(imgPath);
+      imageFound = true;
+    }
+  }
+  if (!imageFound && product.images?.length > 0) {
+    const imgPath = product.images[0].image_path || product.images[0].image_url;
+    if (imgPath) {
+      imageUrl = getImageUrl(imgPath);
+    }
+  }
 
   const handleQuantityChange = (newQty: number) => {
     if (newQty < 1) return;
-    setQuantity(newQty);
     onUpdateQuantity(newQty);
+  };
+
+  const handleVariantChange = (newVariant: any) => {
+    if (newVariant.id === variant?.id) return;
+    
+    // FIX: changeVariant use karein taaki position preserve rahe
+    changeVariant(product.id, variant?.id, newVariant);
+    toast.success("Variant updated in cart!");
   };
 
   return (
     <div className={styles.item}>
       
-      {/* Image */}
       <div className={styles.imageWrapper}>
-        <Link href={`/shop/${product.slug}`}>
+        <Link href={`/product/${product.slug}`}>
           <Image 
-            src={selectedVariant ? selectedVariant.images[0] : product.displayImage} 
+            src={imageUrl} 
             alt={product.name} 
             fill 
             className={styles.image} 
+            unoptimized={isLocalImage(imageUrl)}
           />
         </Link>
       </div>
 
-      {/* Details */}
       <div className={styles.details}>
         
-        {/* Category (Upar shift ki) */}
-        <span className={styles.category}>{product.category}</span>
+        <span className={styles.category}>
+          {product.pet_type?.name} / {product.category?.name}
+        </span>
 
         <div className={styles.topRow}>
-          <Link href={`/shop/${product.slug}`} className={styles.name}>
+          <Link href={`/product/${product.slug}`} className={styles.name}>
             {product.name}
           </Link>
           <button className={styles.removeBtn} onClick={onRemove} aria-label="Remove item">
@@ -59,13 +91,13 @@ export default function CartItem({ product, onRemove, onUpdateQuantity }: Props)
           </button>
         </div>
         
-        {product.variants && product.variants.length > 0 && (
+        {product.has_variants && product.variants && product.variants.length > 0 && (
           <div className={styles.variantsWrapper}>
-            {product.variants.map((v) => (
+            {product.variants.map((v: any) => (
               <button
                 key={v.id}
-                className={`${styles.variantBtn} ${selectedVariant?.id === v.id ? styles.activeVariant : ""}`}
-                onClick={() => setSelectedVariant(v)}
+                className={`${styles.variantBtn} ${variant?.id === v.id ? styles.activeVariant : ""}`}
+                onClick={() => handleVariantChange(v)}
               >
                 {v.name}
               </button>
@@ -74,18 +106,16 @@ export default function CartItem({ product, onRemove, onUpdateQuantity }: Props)
         )}
 
         <div className={styles.bottomRow}>
-          {/* Quantity Selector */}
           <div className={styles.quantity}>
             <button onClick={() => handleQuantityChange(quantity - 1)}>-</button>
             <span>{quantity}</span>
             <button onClick={() => handleQuantityChange(quantity + 1)}>+</button>
           </div>
 
-          {/* Price */}
           <div className={styles.priceWrapper}>
-            <span className={styles.price}>{currentPrice}</span>
+            <span className={styles.price}>${currentPrice.toFixed(2)}</span>
             <span className={styles.itemTotal}>
-              Total: {currentPrice}
+              Total: ${(currentPrice * quantity).toFixed(2)}
             </span>
           </div>
         </div>
