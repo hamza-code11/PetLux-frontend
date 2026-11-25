@@ -1,12 +1,12 @@
-import { CONTACT_MESSAGES } from "@/data/contact";
+"use client";
+
+import { useGetContactMessages } from "@/hooks/useContact";
 import ContactTable from "@/components/admin/contact/ContactTable";
 import styles from "./ContactPage.module.css";
 
-export const metadata = {
-  title: "Contact Messages | Admin",
-};
-
 export default function ContactMessagesPage() {
+  const { data, isLoading } = useGetContactMessages({ per_page: 10 });
+
   return (
     <div className={styles.pageWrapper}>
       <div className={styles.header}>
@@ -18,8 +18,11 @@ export default function ContactMessagesPage() {
         </div>
       </div>
 
-      <ContactTable initialData={CONTACT_MESSAGES} />
+      {isLoading ? (
+        <div className={styles.loading}>Loading messages...</div>
+      ) : (
+        <ContactTable initialData={data?.data ?? []} />
+      )}
     </div>
   );
 }
-

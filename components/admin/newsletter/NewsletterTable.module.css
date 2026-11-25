@@ -33,3 +33,12 @@
 
 .emptyState { text-align: center; padding: var(--spacing-10) !important; color: var(--color-muted); font-size: var(--text-base); }
 .paginationWrapper { flex-shrink: 0; background: transparent; }
+
+
+
+.iconBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+

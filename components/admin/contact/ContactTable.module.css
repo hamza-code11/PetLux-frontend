@@ -46,3 +46,11 @@
 .paginationWrapper { flex-shrink: 0; background: transparent; }
 
 
+.statusBadge {
+  /* existing rules stay — this only adjusts cursor when used as button */
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.statusBadge:hover {
+  opacity: 0.85;
+}

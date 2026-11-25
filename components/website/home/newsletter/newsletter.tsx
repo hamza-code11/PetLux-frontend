@@ -1,8 +1,39 @@
 "use client";
 
+import { useState } from "react";
+import { useSubscribeNewsletter } from "@/hooks/useNewsletter";
+import { useToast } from "@/components/ui/Toast/ToastContext";
 import styles from "./newsletter.module.css";
 
 export default function Newsletter() {
+  const [email, setEmail] = useState("");
+  const { toast } = useToast();
+  const { mutate: subscribe, isPending } = useSubscribeNewsletter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) return;
+
+    subscribe(
+      { email: email.trim() },
+      {
+        onSuccess: (data) => {
+          toast.success(data.message || "Subscribed successfully!");
+          setEmail("");
+        },
+        onError: (err: any) => {
+          const status = err?.response?.status;
+          const msg =
+            err?.response?.data?.message ||
+            (status === 422
+              ? "This email is already subscribed."
+              : "Something went wrong. Please try again.");
+          toast.error(msg);
+        },
+      }
+    );
+  };
+
   return (
     <section className={styles.section}>
       <div className={styles.banner}>
@@ -34,30 +65,39 @@ export default function Newsletter() {
           </div>
 
           {/* Right Side: Form */}
-          <form className={styles.form} onSubmit={(e) => e.preventDefault()}>
+          <form className={styles.form} onSubmit={handleSubmit}>
             <input
               type="email"
               placeholder="Enter your email address"
               className={styles.input}
               required
               aria-label="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isPending}
             />
-            <button type="submit" className={styles.button}>
-              Subscribe
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="m22 2-7 20-4-9-9-4Z" />
-                <path d="M22 2 11 13" />
-              </svg>
+            <button
+              type="submit"
+              className={styles.button}
+              disabled={isPending}
+            >
+              {isPending ? "Subscribing..." : "Subscribe"}
+              {!isPending && (
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="m22 2-7 20-4-9-9-4Z" />
+                  <path d="M22 2 11 13" />
+                </svg>
+              )}
             </button>
           </form>
         </div>
@@ -65,3 +105,4 @@ export default function Newsletter() {
     </section>
   );
 }
+
