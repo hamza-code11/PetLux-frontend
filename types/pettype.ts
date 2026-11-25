@@ -31,3 +31,12 @@ export interface PaginatedResponse<T> {
 }
 
 
+
+export interface PublicPetType {
+  id: number;
+  name: string;
+  slug: string;
+  image_path: string | null;
+  image_url: string | null;
+}
+

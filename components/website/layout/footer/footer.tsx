@@ -36,9 +36,10 @@ const socials = [
       </svg>
     ),
   },
-];
+]; 
 
 export default function Footer() {
+  // useMenu hook directly Menu API ("/menu") ko call karta hai
   const { data: menu = [], isLoading } = useMenu();
 
   return (
@@ -79,23 +80,24 @@ export default function Footer() {
 
         <div className={styles.column}>
           <h3>Shop by Pet</h3>
+          
+          {/* Dynamic Menu API Data */}
           {isLoading ? (
             <span className={styles.loadingText}>Loading...</span>
           ) : (
-            menu.map((pet: any) => (
+            menu.map((pet) => (
               <Link key={pet.id} href={`/shop/${pet.slug}`}>
                 {pet.name}
               </Link>
             ))
           )}
-          <Link href="/brands">Brands</Link>
+          
         </div>
 
         <div className={styles.column}>
           <h3>Customer Care</h3>
           <Link href="/contact">Contact Us</Link>
           <Link href="/faq">FAQs</Link>
-          <Link href="/shipping">Shipping & Returns</Link>
           <Link href="/track-order">Track Order</Link>
         </div>
 
@@ -142,3 +144,4 @@ export default function Footer() {
     </footer>
   );
 }
+

@@ -1,7 +1,7 @@
 // services/pet-type.service.ts
 
 import axiosInstance from '@/lib/axios'; // Aapka axios instance
-import { PetType, PaginatedResponse } from '@/types/petType';
+import { PetType, PaginatedResponse, PublicPetType  } from '@/types/petType';
 
 export interface CreatePetTypePayload {
   name: string;
@@ -72,6 +72,14 @@ export const petTypeService = {
     return response.data;
   },
 
+
+  
+
+    // 6. Public homepage pet types (all)
+  getPublic: async (): Promise<{ data: PublicPetType[] }> => {
+    const response = await axiosInstance.get('/pet-types');
+    return response.data;
+  },
 
   
 };

@@ -273,3 +273,153 @@
     transition: none;
   }
 }
+
+
+
+
+
+/* ============================================================
+   NEW: header right cluster + carousel (append only)
+   ============================================================ */
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.arrows {
+  display: none;
+  gap: 8px;
+}
+
+@media (min-width: 641px) {
+  .arrows {
+    display: inline-flex;
+  }
+}
+
+.arrowBtn {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-black);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.arrowBtn:hover:not(:disabled) {
+  background: var(--color-yellow);
+  border-color: var(--color-yellow);
+  color: #111111;
+}
+
+.arrowBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.arrowBtn:focus-visible {
+  outline: 3px solid var(--color-yellow);
+  outline-offset: 3px;
+}
+
+.scrollWrap {
+  position: relative;
+}
+
+/* Scroll-mode override — applied only via .gridScroll class */
+.gridScroll {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: none !important;
+  grid-auto-columns: minmax(240px, 1fr);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 4px;
+  scroll-behavior: smooth;
+}
+
+.gridScroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Match original grid column widths exactly */
+@media (min-width: 1025px) {
+  .gridScroll {
+    grid-auto-columns: calc((100% - 3 * clamp(14px, 2vw, 28px)) / 4);
+    gap: clamp(14px, 2vw, 28px);
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .gridScroll {
+    grid-auto-columns: calc((100% - 12px) / 2);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .gridScroll {
+    grid-auto-columns: 78%;
+    gap: 12px;
+  }
+  .arrows {
+    display: none !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .gridScroll {
+    grid-auto-columns: 92%;
+  }
+}
+
+.gridItem {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+/* Skeleton */
+.skeleton {
+  pointer-events: none;
+}
+
+.skelLine {
+  display: inline-block;
+  height: 1.1em;
+  width: 60%;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-100) 25%,
+    var(--color-gray-200) 37%,
+    var(--color-gray-100) 63%
+  );
+  background-size: 400% 100%;
+  animation: skelShimmer 1.4s ease infinite;
+}
+
+@keyframes skelShimmer {
+  0%   { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gridScroll {
+    scroll-behavior: auto;
+  }
+  .skelLine {
+    animation: none;
+  }
+}
+

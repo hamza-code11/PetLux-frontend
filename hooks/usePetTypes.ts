@@ -111,10 +111,23 @@ export const useTogglePetTypeNavbar = () => {
     // Success ya error ke baad, menu ko bhi refresh karein
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['petTypes'] });
+      queryClient.invalidateQueries({ queryKey: ['publicPetTypes'] });
       queryClient.invalidateQueries({ queryKey: ['menu'] }); // <-- YEH ZAROORI HAI
     },
   });
 };
 
+
+
+
+
+// 6. Public homepage pet types (all)
+export const useGetPublicPetTypes = () => {
+  return useQuery({
+    queryKey: ['publicPetTypes'],
+    queryFn: () => petTypeService.getPublic(),
+    staleTime: 10 * 60 * 1000,
+  });
+};
 
 
