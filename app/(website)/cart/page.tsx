@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useCart } from "@/hooks/useCart";
 import CartList from "@/components/website/cart/CartList";
 import CartSummary from "@/components/website/cart/CartSummary";
-import CartSkeleton from "@/components/website/skeleton/cartskeleton/CartSkeleton"; // Skeleton import
+import CartSkeleton from "@/components/website/skeleton/cartskeleton/CartSkeleton";
 import styles from "./cart.module.css";
 
 export default function CartPage() {

@@ -8,7 +8,7 @@ import {
   getCart,
   removeFromCart as removeFromCartUtil,
   updateCartQuantity,
-  updateCartVariant, // Naya import
+  updateCartVariant,
 } from '@/utils/cart';
 
 export function useCart() {
@@ -17,11 +17,11 @@ export function useCart() {
 
   useEffect(() => {
     setIsMounted(true);
-    setCart(getCart());
+    setCart(getCart() || []);
 
     const handler = (e: Event) => {
       const detail = (e as CustomEvent<CartItem[]>).detail;
-      setCart(detail);
+      setCart(detail || []); // 👈 Fallback lagaya
     };
     window.addEventListener('cart:updated', handler);
     return () => window.removeEventListener('cart:updated', handler);
@@ -50,7 +50,6 @@ export function useCart() {
     setCart(next);
   };
 
-  // Naya function: Variant change (position preserve)
   const changeVariant = (
     productId: number,
     oldVariantId: number | undefined,
@@ -60,9 +59,12 @@ export function useCart() {
     setCart(next);
   };
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  // 👈 Safety: Agar cart undefined ho to empty array use karein
+  const safeCart = cart || []; 
 
-  const totalPrice = cart.reduce((sum, item) => {
+  const totalItems = safeCart.reduce((sum, item) => sum + item.quantity, 0);
+
+  const totalPrice = safeCart.reduce((sum, item) => {
     let price = 0;
     if (item.variant) {
       price = Number(item.variant.sale_price || item.variant.regular_price);
@@ -73,14 +75,13 @@ export function useCart() {
   }, 0);
 
   return {
-    cart,
+    cart: safeCart,
     isMounted,
     addItem,
     removeItem,
     updateQuantity,
-    changeVariant, // Export karein
+    changeVariant,
     totalItems,
     totalPrice,
   };
 }
-

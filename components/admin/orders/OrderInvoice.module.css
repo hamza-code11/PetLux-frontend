@@ -1,0 +1,35 @@
+/* Screen par hidden, print mein #invoice-print-root rule isay show karta hai */
+.invoice {
+  display: none;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 24px;
+  background: #fff;
+}
+
+.top { display: flex; justify-content: space-between; margin-bottom: 32px; }
+.brand { font-size: 24px; margin: 0 0 4px; }
+.invoiceTitle { font-size: 28px; letter-spacing: 2px; margin: 0 0 8px; }
+.muted { color: #666; margin: 0; }
+.bold { font-weight: 700; }
+.right { text-align: right; }
+.center { text-align: center; }
+
+.parties { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px; }
+.parties p { margin: 0; }
+.label { font-size: 11px; text-transform: uppercase; color: #666; margin: 0 0 6px; }
+
+.table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+.table th { text-align: left; padding: 10px 8px; background: #f3f4f6; font-size: 11px; text-transform: uppercase; }
+.table th.right { text-align: right; }
+.table th.center { text-align: center; }
+.table td { padding: 10px 8px; border-bottom: 1px solid #e5e7eb; }
+
+.totals { width: 260px; margin-left: auto; margin-bottom: 24px; }
+.totals div { display: flex; justify-content: space-between; padding: 6px 0; }
+.grand { border-top: 2px solid #111; font-weight: 700; font-size: 16px; margin-top: 4px; }
+
+.footer { text-align: center; margin-top: 40px; color: #666; }
+

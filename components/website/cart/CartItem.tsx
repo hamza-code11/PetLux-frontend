@@ -76,7 +76,7 @@ export default function CartItem({ item, onRemove, onUpdateQuantity }: Props) {
       <div className={styles.details}>
         
         <span className={styles.category}>
-          {product.pet_type?.name} / {product.category?.name}
+          {product.petType?.name} / {product.category?.name}
         </span>
 
         <div className={styles.topRow}>

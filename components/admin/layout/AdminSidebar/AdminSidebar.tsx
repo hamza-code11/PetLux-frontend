@@ -17,7 +17,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { toast } = useToast();
   const { mutate: logout, isPending: isLoggingOut } = useLogout(); // Logout hook initialization
-  
+
   // Dropdown states
   const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({
     petTypes: false,
@@ -50,17 +50,17 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
   return (
     <>
       <div className={`${styles.overlay} ${isOpen ? styles.overlayOpen : ""}`} onClick={onClose} />
-      
+
       <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ""}`}>
-        
+
         {/* Logo Section */}
         <div className={styles.logoWrapper}>
           <Link href="/admin" className={styles.logo}>
-            <Image 
-              src="/logo/logo.png" 
+            <Image
+              src="/logo/logo.png"
               alt="PetLux"
-              width={120} 
-              height={40} 
+              width={120}
+              height={40}
               className={styles.logoImage}
               priority
             />
@@ -69,13 +69,13 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* Main Navigation */}
         <div className={styles.nav}>
-          
+
           <div className={styles.section}>
             <span className={styles.sectionTitle}>MAIN MENU</span>
-            
+
             {/* Dashboard Link */}
-            <Link 
-              href="/admin" 
+            <Link
+              href="/admin"
               onClick={onClose}
               className={`${styles.link} ${pathname === "/admin" ? styles.linkActive : ""}`}
             >
@@ -87,7 +87,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Pet Types Accordion */}
             <div className={styles.menuGroup}>
-              <button 
+              <button
                 className={`${styles.menuBtn} ${openMenus.petTypes ? styles.menuBtnActive : ""}`}
                 onClick={() => toggleMenu("petTypes")}
               >
@@ -101,7 +101,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              
+
               <div className={`${styles.subMenu} ${openMenus.petTypes ? styles.subMenuOpen : ""}`}>
                 <Link href="/admin/petTypes" className={getSubLinkClass("/admin/pet-types")} onClick={onClose}>List Pet Types</Link>
                 <Link href="/admin/petTypes/add" className={getSubLinkClass("/admin/pet-types/add")} onClick={onClose}>Add Pet Type</Link>
@@ -110,7 +110,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Categories Accordion */}
             <div className={styles.menuGroup}>
-              <button 
+              <button
                 className={`${styles.menuBtn} ${openMenus.categories ? styles.menuBtnActive : ""}`}
                 onClick={() => toggleMenu("categories")}
               >
@@ -124,7 +124,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              
+
               <div className={`${styles.subMenu} ${openMenus.categories ? styles.subMenuOpen : ""}`}>
                 <Link href="/admin/categories" className={getSubLinkClass("/admin/Categories")} onClick={onClose}>List Categories</Link>
                 <Link href="/admin/categories/add" className={getSubLinkClass("/admin/Categories/add")} onClick={onClose}>Add Category</Link>
@@ -133,7 +133,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Subcategories Accordion */}
             <div className={styles.menuGroup}>
-              <button 
+              <button
                 className={`${styles.menuBtn} ${openMenus.subcategories ? styles.menuBtnActive : ""}`}
                 onClick={() => toggleMenu("subcategories")}
               >
@@ -147,7 +147,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              
+
               <div className={`${styles.subMenu} ${openMenus.subcategories ? styles.subMenuOpen : ""}`}>
                 <Link href="/admin/subcategories" className={getSubLinkClass("/admin/Subcategories")} onClick={onClose}>List Subcategories</Link>
                 <Link href="/admin/subcategories/add" className={getSubLinkClass("/admin/Subcategories/add")} onClick={onClose}>Add Subcategory</Link>
@@ -156,7 +156,7 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
 
             {/* Products Accordion */}
             <div className={styles.menuGroup}>
-              <button 
+              <button
                 className={`${styles.menuBtn} ${openMenus.products ? styles.menuBtnActive : ""}`}
                 onClick={() => toggleMenu("products")}
               >
@@ -170,17 +170,44 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>
               </button>
-              
+
               <div className={`${styles.subMenu} ${openMenus.products ? styles.subMenuOpen : ""}`}>
                 <Link href="/admin/products" className={getSubLinkClass("/admin/Products")} onClick={onClose}>List Products</Link>
                 <Link href="/admin/products/add" className={getSubLinkClass("/admin/Products/add")} onClick={onClose}>Add Product</Link>
               </div>
             </div>
+
+
+            {/* Orders Link — Products accordion ke baad */}
+            <Link
+              href="/admin/orders"
+              onClick={onClose}
+              className={`${styles.link} ${pathname === "/admin/orders" ? styles.linkActive : ""}`}
+            >
+              <svg className={styles.icon} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+              Orders
+            </Link>
+
+            {/* Payment Settings */}
+            <Link
+              href="/admin/payment-settings"
+              onClick={onClose}
+              className={`${styles.link} ${pathname === "/admin/payment-settings" ? styles.linkActive : ""}`}
+            >
+              <svg className={styles.icon} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+              </svg>
+              Payment Settings
+            </Link>
+
+
           </div>
 
 
-          <Link 
-            href="/admin/reviews" 
+          <Link
+            href="/admin/reviews"
             onClick={onClose}
             className={`${styles.link} ${pathname === "/admin/reviews" ? styles.linkActive : ""}`}
           >
@@ -195,8 +222,8 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
           <div className={styles.section}>
             <span className={styles.sectionTitle}>INBOX</span>
 
-            <Link 
-              href="/admin/cms" 
+            <Link
+              href="/admin/cms"
               onClick={onClose}
               className={`${styles.link} ${pathname === "/admin/cms" ? styles.linkActive : ""}`}
             >
@@ -206,8 +233,8 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
               CMS Manager
             </Link>
 
-            <Link 
-              href="/admin/messages" 
+            <Link
+              href="/admin/messages"
               onClick={onClose}
               className={`${styles.link} ${pathname === "/admin/messages" ? styles.linkActive : ""}`}
             >
@@ -217,8 +244,8 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
               Contact Messages
             </Link>
 
-            <Link 
-              href="/admin/newsletter" 
+            <Link
+              href="/admin/newsletter"
               onClick={onClose}
               className={`${styles.link} ${pathname === "/admin/newsletter" ? styles.linkActive : ""}`}
             >
@@ -233,8 +260,8 @@ export default function AdminSidebar({ isOpen, onClose }: SidebarProps) {
 
         {/* Logout Button Fixed at Bottom */}
         <div className={styles.logoutWrapper}>
-          <button 
-            onClick={handleLogout} 
+          <button
+            onClick={handleLogout}
             className={styles.logoutBtn}
             disabled={isLoggingOut}
           >
