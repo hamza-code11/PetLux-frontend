@@ -65,14 +65,9 @@ export default function CategoryForm() {
       return;
     }
 
-    if (!imageFile) {
-      toast.error("Please select an image.");
-      return;
-    }
-
     // API Call
     createCategory(
-      { name: name.trim(), slug, image: imageFile },
+      { name: name.trim(), slug, image: imageFile || undefined },
       {
         onSuccess: () => {
           toast.success("Category added successfully!");
@@ -90,7 +85,7 @@ export default function CategoryForm() {
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.formGrid}>
         <div className={styles.inputsSection}>
-          
+
           <div className={styles.formGroup}>
             <label className={styles.label}>Category Name</label>
             <input
@@ -115,7 +110,7 @@ export default function CategoryForm() {
           </div>
 
           <div className={styles.formGroup}>
-            <label className={styles.label}>Category Image</label>
+            <label className={styles.label}>Category Image (Optional)</label>
             <input
               type="file"
               accept="image/jpeg,image/png,image/svg+xml,image/webp,image/jfif"

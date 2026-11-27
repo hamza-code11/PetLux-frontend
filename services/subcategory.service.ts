@@ -6,7 +6,7 @@ import { Subcategory, PaginatedResponse } from '@/types/subcategory';
 export interface CreateSubcategoryPayload {
   name: string;
   slug: string;
-  image: File;
+  image?: File;
 }
 
 export interface UpdateSubcategoryPayload {
@@ -33,7 +33,9 @@ export const subcategoryService = {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('slug', data.slug);
-    formData.append('image', data.image);
+    if (data.image) {
+  formData.append("image", data.image);
+}
 
     const response = await axiosInstance.post('/admin/subcategories', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },

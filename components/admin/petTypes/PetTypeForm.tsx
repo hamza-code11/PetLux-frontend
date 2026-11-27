@@ -62,33 +62,28 @@ export default function PetTypeForm() {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!name.trim()) {
-      toast.error("Pet Type Name is required.");
-      return;
+  if (!name.trim()) {
+    toast.error("Pet Type Name is required.");
+    return;
+  }
+
+  createPetType(
+    { name: name.trim(), slug, image: imageFile || undefined },
+    {
+      onSuccess: () => {
+        toast.success("Pet Type added successfully!");
+        router.push("/admin/petTypes");
+      },
+      onError: (err: any) => {
+        const errorMsg = err.response?.data?.message || "Failed to create pet type.";
+        toast.error(errorMsg);
+      },
     }
-
-    if (!imageFile) {
-      toast.error("Please select an image.");
-      return;
-    }
-
-    createPetType(
-      { name: name.trim(), slug, image: imageFile },
-      {
-        onSuccess: () => {
-          toast.success("Pet Type added successfully!");
-          router.push("/admin/petTypes");
-        },
-        onError: (err: any) => {
-          const errorMsg = err.response?.data?.message || "Failed to create pet type.";
-          toast.error(errorMsg);
-        },
-      }
-    );
-  };
+  );
+};
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -123,7 +118,7 @@ export default function PetTypeForm() {
           </div>
 
           <div className={styles.formGroup}>
-            <label className={styles.label}>Pet Type Image</label>
+            <label className={styles.label}>Pet Type Image handleSubmit (Optional)</label>
             <input
               type="file"
               accept="image/jpeg,image/png,image/svg+xml,image/webp,image/jfif"

@@ -1,12 +1,12 @@
 // services/pet-type.service.ts
 
 import axiosInstance from '@/lib/axios'; // Aapka axios instance
-import { PetType, PaginatedResponse, PublicPetType  } from '@/types/petType';
+import { PetType, PaginatedResponse, PublicPetType } from '@/types/petType';
 
 export interface CreatePetTypePayload {
   name: string;
   slug: string;
-  image: File;
+  image?: File;
 }
 
 export interface UpdatePetTypePayload {
@@ -33,7 +33,9 @@ export const petTypeService = {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('slug', data.slug);
-    formData.append('image', data.image);
+    if (data.image) {
+      formData.append("image", data.image);
+    }
 
     const response = await axiosInstance.post('/admin/pet-types', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -47,7 +49,7 @@ export const petTypeService = {
     formData.append('_method', 'PUT'); // Laravel Method Spoofing
     formData.append('name', data.name);
     formData.append('slug', data.slug);
-    
+
     if (data.image) {
       formData.append('image', data.image);
     }
@@ -73,13 +75,13 @@ export const petTypeService = {
   },
 
 
-  
 
-    // 6. Public homepage pet types (all)
+
+  // 6. Public homepage pet types (all)
   getPublic: async (): Promise<{ data: PublicPetType[] }> => {
     const response = await axiosInstance.get('/pet-types');
     return response.data;
   },
 
-  
+
 };

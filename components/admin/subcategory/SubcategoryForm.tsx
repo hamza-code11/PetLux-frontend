@@ -55,33 +55,30 @@ export default function SubcategoryForm() {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (!name.trim()) {
-      toast.error("Subcategory Name is required.");
-      return;
-    }
-    if (!imageFile) {
-      toast.error("Please select an image.");
-      return;
-    }
+  if (!name.trim()) {
+    toast.error("Subcategory Name is required.");
+    return;
+  }
 
-    // API Call
-    createSubcategory(
-      { name: name.trim(), slug, image: imageFile },
-      {
-        onSuccess: () => {
-          toast.success("Subcategory added successfully!");
-          router.push("/admin/subcategories");
-        },
-        onError: (err: any) => {
-          const errorMsg = err.response?.data?.message || "Failed to create subcategory.";
-          toast.error(errorMsg);
-        },
-      }
-    );
-  };
+  // API Call
+  createSubcategory(
+    { name: name.trim(), slug, image: imageFile || undefined },
+    {
+      onSuccess: () => {
+        toast.success("Subcategory added successfully!");
+        router.push("/admin/subcategories");
+      },
+      onError: (err: any) => {
+        const errorMsg = err.response?.data?.message || "Failed to create subcategory.";
+        toast.error(errorMsg);
+      },
+    }
+  );
+};
+
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
@@ -111,7 +108,7 @@ export default function SubcategoryForm() {
           </div>
 
           <div className={styles.formGroup}>
-            <label className={styles.label}>Subcategory Image</label>
+            <label className={styles.label}>Subcategory Image (Optional)</label>
             <input
               type="file"
               accept="image/jpeg,image/png,image/svg+xml,image/webp,image/jfif"

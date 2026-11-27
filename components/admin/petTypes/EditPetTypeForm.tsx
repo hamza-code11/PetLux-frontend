@@ -25,7 +25,7 @@ export default function EditPetTypeForm({ id }: Props) {
   const [slug, setSlug] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-  
+
   // Blob URL track karne ke liye (Memory leak fix)
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
 
@@ -36,8 +36,8 @@ export default function EditPetTypeForm({ id }: Props) {
     if (petType) {
       setName(petType.name);
       setSlug(petType.slug);
-      // Backend image ka URL set karein
-      setImagePreview(getImageUrl(petType.image_path));
+      // Image optional hai: sirf tab preview set karein jab image_path ho
+      setImagePreview(petType.image_path ? getImageUrl(petType.image_path) : null);
     }
   }, [petType]);
 
@@ -51,7 +51,7 @@ export default function EditPetTypeForm({ id }: Props) {
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setName(value);
-    
+
     // Slug automatically generate hoga
     const generatedSlug = value
       .toLowerCase()
@@ -118,10 +118,10 @@ export default function EditPetTypeForm({ id }: Props) {
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
       <div className={styles.formGrid}>
-        
+
         {/* Left Side: Inputs */}
         <div className={styles.inputsSection}>
-          
+
           <div className={styles.formGroup}>
             <label className={styles.label}>Pet Type Name</label>
             <input
@@ -154,7 +154,7 @@ export default function EditPetTypeForm({ id }: Props) {
               className={styles.hiddenInput}
               disabled={isPending}
             />
-            
+
             <div
               className={styles.uploadBox}
               onClick={() => !isPending && fileInputRef.current?.click()}
@@ -176,9 +176,9 @@ export default function EditPetTypeForm({ id }: Props) {
           <span className={styles.label}>Image Preview</span>
           <div className={styles.imagePreviewWrapper}>
             {imagePreview ? (
-              <img 
-                src={imagePreview} 
-                alt="Preview" 
+              <img
+                src={imagePreview}
+                alt="Preview"
                 className={styles.previewImage}
                 // Agar image load na ho toh placeholder dikhe
                 onError={(e) => {

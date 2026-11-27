@@ -6,7 +6,7 @@ import { Category, PaginatedResponse } from '@/types/category';
 export interface CreateCategoryPayload {
   name: string;
   slug: string;
-  image: File;
+  image?: File;
 }
 
 export interface UpdateCategoryPayload {
@@ -33,7 +33,9 @@ export const categoryService = {
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('slug', data.slug);
-    formData.append('image', data.image);
+    if (data.image) {
+      formData.append("image", data.image);
+    }
 
     const response = await axiosInstance.post('/admin/categories', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -47,7 +49,7 @@ export const categoryService = {
     formData.append('_method', 'PUT'); // Laravel Method Spoofing
     formData.append('name', data.name);
     formData.append('slug', data.slug);
-    
+
     if (data.image) {
       formData.append('image', data.image);
     }
