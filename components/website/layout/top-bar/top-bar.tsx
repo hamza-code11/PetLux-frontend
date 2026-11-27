@@ -1,7 +1,7 @@
-import Link from "next/link";
-import ThemeToggle from "@/components/ThemeToggle"; // Apna sahi path dena yahan
 
-import { siteConfig } from "@/types/site";
+import Link from "next/link";
+import ThemeToggle from "@/components/ThemeToggle";
+import { STORE_INFO } from "@/lib/storeInfo";
 import styles from "./top-bar.module.css";
 
 const MailIcon = () => (
@@ -33,7 +33,7 @@ const PhoneIcon = () => (
     strokeLinejoin="round"
     aria-hidden
   >
-    <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" />
+    <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l2.5-2 2 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" />
   </svg>
 );
 
@@ -43,28 +43,31 @@ export default function TopBar() {
       <div className={styles.inner}>
         <div className={styles.group}>
           <a
-            href={`mailto:${siteConfig.email}`}
+            href={`mailto:${STORE_INFO.email}`}
             className={`${styles.item} ${styles.emailItem}`}
           >
             <MailIcon />
-            <span>{siteConfig.email}</span>
+            <span>{STORE_INFO.email}</span>
           </a>
 
-          <a href={`tel:${siteConfig.phoneHref}`} className={styles.item}>
+          <a
+            href={`tel:${STORE_INFO.phone}`}
+            className={styles.item}
+          >
             <PhoneIcon />
-            <span>{siteConfig.phone}</span>
+            <span>{STORE_INFO.phone}</span>
           </a>
         </div>
 
         <div className={styles.group}>
-          {/* Theme Toggle Yahan Add Kiya Hai */}
           <div className={styles.themeToggleWrapper}>
-             <ThemeToggle />
+            <ThemeToggle />
           </div>
-          
-          <Link href="/track-order" className={styles.item}>
+
+          <Link href="/profile" className={styles.item}>
             Track Order
           </Link>
+
           <Link href="/contact" className={styles.item}>
             Contact
           </Link>
@@ -73,3 +76,4 @@ export default function TopBar() {
     </div>
   );
 }
+
