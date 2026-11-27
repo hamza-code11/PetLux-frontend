@@ -5,13 +5,13 @@ import ProfileHeader from "@/components/website/profile/ProfileHeader";
 import ProfileSidebar from "@/components/website/profile/ProfileSidebar";
 import ProfileDetails from "@/components/website/profile/ProfileDetails";
 import EditProfile from "@/components/website/profile/EditProfile";
+import MyOrders from "@/components/website/profile/MyOrders";
+import TrackOrders from "@/components/website/profile/TrackOrders";
 import styles from "./profile.module.css";
 
 export default function ProfilePage() {
-  // Default tab "details" rahega
   const [activeTab, setActiveTab] = useState("details");
 
-  // Right side ka content decide karne ke liye function
   const renderContent = () => {
     switch (activeTab) {
       case "details":
@@ -19,9 +19,9 @@ export default function ProfilePage() {
       case "edit":
         return <EditProfile />;
       case "orders":
-        return <div className={styles.placeholder}>My Orders (Coming Soon)</div>;
+        return <MyOrders />;
       case "track":
-        return <div className={styles.placeholder}>Track Orders (Coming Soon)</div>;
+        return <TrackOrders />;        // 👈 yahan
       default:
         return <ProfileDetails />;
     }
@@ -30,21 +30,12 @@ export default function ProfilePage() {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        
         <ProfileHeader />
-
         <div className={styles.layout}>
-          {/* Sidebar ko state aur setter pass kar diya */}
           <ProfileSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-          
-          <div className={styles.content}>
-            {/* Yahan conditionally component render hoga */}
-            {renderContent()}
-          </div>
+          <div className={styles.content}>{renderContent()}</div>
         </div>
-
       </div>
     </div>
   );
 }
-

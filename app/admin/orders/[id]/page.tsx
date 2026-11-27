@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/Toast/ToastContext";
 import { Order } from "@/types/order";
 import { formatMoney } from "@/lib/formatMoney";
 import OrderInvoice from "@/components/admin/orders/OrderInvoice";
+import { getImageUrl } from "@/lib/imageUrl";
 import styles from "./OrderDetailsPage.module.css";
 
 const STATUS_OPTIONS: Order["status"][] = [
@@ -60,6 +61,8 @@ export default function OrderDetailsPage({
     );
   }
 
+  const screenshotUrl = getImageUrl(order.payment_screenshot);
+
   return (
     <div className={styles.pageWrapper}>
       {/* HEADER */}
@@ -105,11 +108,13 @@ export default function OrderDetailsPage({
         </div>
         <div className={styles.statCard}>
           <span className={styles.statLabel}>Items</span>
-          <span className={styles.statValue}>{order.items_count}</span>
+          <span className={styles.statValue}>
+            {order.items.reduce((sum, it) => sum + it.quantity, 0)}
+          </span>
         </div>
         <div className={styles.statCard}>
           <span className={styles.statLabel}>Payment Method</span>
-          <span className={styles.statValue}>{order.payment_method || "—"}</span>
+          <span className={styles.statValue}>{order.payment_method || "Screenshot"}</span>
         </div>
         <div className={styles.statCard}>
           <span className={styles.statLabel}>Total</span>
@@ -157,18 +162,8 @@ export default function OrderDetailsPage({
             <h2 className={styles.cardTitle}>Payment Proof</h2>
             {order.payment_screenshot ? (
               <>
-                <a
-                  href={order.payment_screenshot}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.proofLink}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={order.payment_screenshot}
-                    alt="Payment screenshot"
-                    className={styles.proofImg}
-                  />
+                <a href={screenshotUrl} target="_blank" rel="noopener noreferrer" className={styles.proofLink}>
+                  <img src={screenshotUrl} alt="Payment screenshot" className={styles.proofImg} />
                 </a>
                 <p className={styles.proofHint}>Click image to open full size</p>
               </>

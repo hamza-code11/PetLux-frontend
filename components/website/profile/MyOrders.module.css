@@ -1,0 +1,284 @@
+/* ============================================================
+   HEADER
+   ============================================================ */
+.listHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.heading {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--color-foreground);
+  margin: 0;
+}
+
+.count {
+  font-size: 12px;
+  color: var(--color-muted);
+  font-weight: 600;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+/* ============================================================
+   LIST
+   ============================================================ */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ============================================================
+   ORDER CARD
+   ============================================================ */
+.orderCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.orderCard:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.orderInfo {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.orderLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.orderNumber {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--color-foreground);
+  letter-spacing: 0.01em;
+}
+
+/* Status pills */
+.statusPill {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.s_pending    { background: #FEF3C7; color: #B45309; }
+.s_processing { background: #DBEAFE; color: #1D4ED8; }
+.s_shipped    { background: #E0E7FF; color: #4338CA; }
+.s_delivered  { background: #DCFCE7; color: #15803D; }
+.s_cancelled  { background: #FEE2E2; color: #B91C1C; }
+
+/* ============================================================
+   META GRID
+   ============================================================ */
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px dashed var(--color-border);
+  border-bottom: 1px dashed var(--color-border);
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metaLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  font-weight: 700;
+}
+
+.metaValue {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+.metaTotal {
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 800;
+}
+
+@media (max-width: 520px) {
+  .metaGrid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ============================================================
+   PREVIEW
+   ============================================================ */
+.preview {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   ACTIONS
+   ============================================================ */
+.cardActions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.primaryBtn,
+.secondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 40px;
+  padding: 0 18px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: transform 0.15s ease, opacity 0.2s ease, background 0.2s ease;
+}
+
+.primaryBtn {
+  background: var(--color-foreground);
+  color: var(--color-background);
+  font-family: inherit;
+  line-height: 1;
+  appearance: none;
+}
+
+.primaryBtn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+.secondaryBtn {
+  background: var(--color-surface);
+  color: var(--color-foreground);
+  border-color: var(--color-border);
+  /* 👇 button element ke liye reset */
+  font-family: inherit;
+  line-height: 1;
+  appearance: none;
+}
+.secondaryBtn:hover {
+  background: var(--color-background);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.emptyState {
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 56px 32px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.emptyIcon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--color-background);
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.emptyState h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--color-foreground);
+}
+
+.emptyState p {
+  margin: 0 0 16px;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+  max-width: 360px;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   SKELETON
+   ============================================================ */
+.skeletonCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.skeletonRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.skLine {
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(
+    90deg,
+    var(--color-border) 25%,
+    rgba(0, 0, 0, 0.04) 37%,
+    var(--color-border) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

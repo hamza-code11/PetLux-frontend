@@ -90,7 +90,7 @@ export default function WishlistItem({ item, onRemove }: Props) {
             {product.name}
           </Link>
           <span className={styles.category}>
-            {product.pet_type?.name} / {product.category?.name}
+            {product.petType?.name} / {product.category?.name}
           </span>
           
           {product.has_variants && product.variants && product.variants.length > 0 && (

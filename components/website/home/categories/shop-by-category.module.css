@@ -135,3 +135,15 @@
   }
 }
 
+
+
+/* Fallback jab image na ho */
+.imageFallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    var(--color-gray-100),
+    var(--color-gray-200, #e5e7eb)
+  );
+}

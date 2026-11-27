@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { useMenu } from "@/hooks/useMenu";
+import { STORE_INFO } from "@/lib/storeInfo";
 import styles from "./footer.module.css";
 
 const socials = [
@@ -36,7 +37,7 @@ const socials = [
       </svg>
     ),
   },
-]; 
+];
 
 export default function Footer() {
   // useMenu hook directly Menu API ("/menu") ko call karta hai
@@ -80,7 +81,7 @@ export default function Footer() {
 
         <div className={styles.column}>
           <h3>Shop by Pet</h3>
-          
+
           {/* Dynamic Menu API Data */}
           {isLoading ? (
             <span className={styles.loadingText}>Loading...</span>
@@ -91,7 +92,7 @@ export default function Footer() {
               </Link>
             ))
           )}
-          
+
         </div>
 
         <div className={styles.column}>
@@ -109,32 +110,79 @@ export default function Footer() {
         </div>
 
         {/* Contact info */}
+        {/* Contact info */}
         <div className={styles.contact}>
           <h3>Contact Us</h3>
 
-          <a href="tel:+920000000000" className={styles.contactItem}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
-            </svg>
-            <span>+92 300 0000000</span>
-          </a>
+          {STORE_INFO.phone && (
+            <a
+              href={`tel:${STORE_INFO.phone.replace(/\s/g, "")}`}
+              className={styles.contactItem}
+            >
+              {/* Existing phone SVG */}
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
+              </svg>
+              <span>{STORE_INFO.phone}</span>
+            </a>
+          )}
 
-          <a href="mailto:info@petlux.com" className={styles.contactItem}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <rect x="2" y="4" width="20" height="16" rx="2" />
-              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-            </svg>
-            <span>info@petlux.com</span>
-          </a>
+          {STORE_INFO.email && (
+            <a
+              href={`mailto:${STORE_INFO.email}`}
+              className={styles.contactItem}
+            >
+              {/* Existing email SVG */}
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
+              <span>{STORE_INFO.email}</span>
+            </a>
+          )}
 
-          <div className={styles.contactItem}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-            <span>Shop # 12, Main Boulevard, Karachi, Pakistan</span>
-          </div>
+          {STORE_INFO.address && (
+            <div className={styles.contactItem}>
+              {/* Existing location SVG */}
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0 1 16 0Z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span>{STORE_INFO.address}</span>
+            </div>
+          )}
         </div>
+
       </div>
 
       <div className={styles.bottom}>

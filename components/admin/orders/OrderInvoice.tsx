@@ -1,30 +1,37 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Order } from "@/types/order";
 import { formatMoney } from "@/lib/formatMoney";
+import { STORE_INFO } from "@/lib/storeInfo";
 import styles from "./OrderInvoice.module.css";
 
-// Print ke waqt sirf invoice dikhane ke liye
+// @page margin 0 => browser ka header/footer (date, title, URL, page no.) nahi aata
 const PRINT_CSS = `
 @media print {
-  body * { visibility: hidden !important; }
-  #invoice-print-root, #invoice-print-root * { visibility: visible !important; }
-  #invoice-print-root {
-    display: block !important;
-    position: absolute; left: 0; top: 0; width: 100%;
-  }
-  @page { margin: 12mm; }
+  @page { margin: 0; size: A4; }
+  html, body { margin: 0 !important; padding: 0 !important; background: #fff !important; }
+  body > *:not(#invoice-print-root) { display: none !important; }
+  #invoice-print-root { display: block !important; }
 }
 `;
 
 export default function OrderInvoice({ order }: { order: Order }) {
-  return (
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  if (!mounted) return null;
+
+  return createPortal(
     <>
       <style>{PRINT_CSS}</style>
       <div id="invoice-print-root" className={styles.invoice}>
         <div className={styles.top}>
           <div>
-            <h1 className={styles.brand}>Your Store Name</h1>
-            <p className={styles.muted}>Store address, City, Country</p>
-            <p className={styles.muted}>support@yourstore.com</p>
+            <h1 className={styles.brand}>{STORE_INFO.name}</h1>
+            {STORE_INFO.address && <p className={styles.muted}>{STORE_INFO.address}</p>}
+            {STORE_INFO.email && <p className={styles.muted}>{STORE_INFO.email}</p>}
+            {STORE_INFO.phone && <p className={styles.muted}>{STORE_INFO.phone}</p>}
           </div>
           <div className={styles.right}>
             <h2 className={styles.invoiceTitle}>INVOICE</h2>
@@ -83,6 +90,7 @@ export default function OrderInvoice({ order }: { order: Order }) {
 
         <p className={styles.footer}>Thank you for your order!</p>
       </div>
-    </>
+    </>,
+    document.body
   );
 }

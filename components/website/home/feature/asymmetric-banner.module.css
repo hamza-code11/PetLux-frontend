@@ -178,3 +178,12 @@
 :global(.dark) .content {
   background: var(--color-surface); /* Dark mode mein background dark gray */
 }
+
+
+
+.imageFallback {
+  position: absolute;
+  inset: 0;
+  background: var(--color-gray-100);
+}
+

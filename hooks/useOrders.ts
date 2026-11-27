@@ -20,12 +20,11 @@ export const useGetOrder = (id: number) => {
     queryKey: ["order", id],
     queryFn: async () => {
       const res = await axiosInstance.get(`/admin/orders/${id}`);
-      return res.data;
+      return res.data as { data: Order };   // 👈 yahan type
     },
     enabled: !!id,
   });
 };
-
 // ---------- MUTATIONS ----------
 export const useUpdateOrderStatus = () => {
   const queryClient = useQueryClient();
@@ -65,3 +64,33 @@ export const usePlaceOrder = () => {
     },
   });
 };
+
+
+
+// hooks/useOrders.ts
+
+export function useMyOrders() {
+  return useQuery<{ status: boolean; data: Order[] }>({
+    queryKey: ["my-orders"],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get(`/orders/my-orders`);
+      return data;
+    },
+    staleTime: 30_000,
+  });
+}
+
+
+export function useTrackOrder(orderNumber: string) {
+  return useQuery<{ status: boolean; data: Order }>({
+    queryKey: ["track-order", orderNumber],
+    queryFn: async () => {
+      const { data } = await axiosInstance.get(
+        `/orders/track/${encodeURIComponent(orderNumber)}`
+      );
+      return data;
+    },
+    enabled: !!orderNumber,
+    retry: false,
+  });
+}

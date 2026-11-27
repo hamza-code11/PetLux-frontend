@@ -246,9 +246,16 @@
 
 
 
+
+
+
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { useCmsSection, type HeroContent } from "@/hooks/useCms";
+import { getImageUrl } from "@/lib/imageUrl";
 import styles from "./hero.module.css";
 
 const font = Plus_Jakarta_Sans({
@@ -259,19 +266,23 @@ const font = Plus_Jakarta_Sans({
 });
 
 const FEATURES = [
-  { lines: ["Premium Quality", "Ingredients"], icon: "shield" },
-  { lines: ["Supports Overall", "Health"], icon: "heart" },
-  { lines: ["Loved by", "Pets"], icon: "paw" },
-  { lines: ["Fast & Reliable", "Delivery"], icon: "truck" },
+  { icon: "shield" },
+  { icon: "heart" },
+  { icon: "paw" },
+  { icon: "truck" },
 ] as const;
 
-function FeatureIcon({ type }: { type: (typeof FEATURES)[number]["icon"] }) {
+function FeatureIcon({
+  type,
+}: {
+  type: (typeof FEATURES)[number]["icon"];
+}) {
   const common = {
     className: styles.featureIcon,
     viewBox: "0 0 48 48",
     fill: "none",
-    "aria-hidden": true,
-  } as const;
+    "aria-hidden": true as const,
+  };
 
   if (type === "shield") {
     return (
@@ -318,8 +329,22 @@ function FeatureIcon({ type }: { type: (typeof FEATURES)[number]["icon"] }) {
 
   return (
     <svg {...common}>
-      <path d="M2 18h9M4 25h9M7 32h6" stroke="#111" strokeWidth="3" strokeLinecap="round" />
-      <rect x="15" y="12" width="22" height="22" rx="2" fill="#FECC10" stroke="#111" strokeWidth="3" />
+      <path
+        d="M2 18h9M4 25h9M7 32h6"
+        stroke="#111"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <rect
+        x="15"
+        y="12"
+        width="22"
+        height="22"
+        rx="2"
+        fill="#FECC10"
+        stroke="#111"
+        strokeWidth="3"
+      />
       <path
         d="M37 19h6l5 7v8H37z"
         fill="#FECC10"
@@ -334,13 +359,31 @@ function FeatureIcon({ type }: { type: (typeof FEATURES)[number]["icon"] }) {
 }
 
 export default function Hero() {
+  const { data, isLoading, isError } =
+    useCmsSection<HeroContent>("hero_section");
+
+  const content = data?.data?.content;
+
+  if (isLoading) return null;
+
+  if (isError || !content) return null;
+
+  const heroImage = content.image
+    ? getImageUrl(content.image)
+    : null;
+
   return (
     <section
       className={`${font.variable} ${styles.hero}`}
       aria-labelledby="hero-title"
     >
-      {/* Paw shape (ek baar define, baar baar use hota hai) */}
-      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+      {/* Paw Symbol */}
+      <svg
+        width="0"
+        height="0"
+        style={{ position: "absolute" }}
+        aria-hidden="true"
+      >
         <defs>
           <symbol id="kk-paw" viewBox="0 0 100 100">
             <ellipse cx="17" cy="45" rx="9" ry="12" transform="rotate(-20 17 45)" />
@@ -352,18 +395,21 @@ export default function Hero() {
         </defs>
       </svg>
 
-      {/* ---------- Photo ---------- */}
-      <Image
-        src="/images/hero-pets.jpg"
-        alt="Golden retriever and cat beside a bowl of food and a Kam KarP pet food bag"
-        width={1197}
-        height={646}
-        priority
-        sizes="(max-width: 860px) 100vw, 72vw"
-        className={styles.photo}
-      />
+      {/* Hero Image */}
+      {heroImage && (
+        <Image
+          src={heroImage}
+          alt="PetLux premium pet food"
+          width={1197}
+          height={646}
+          priority
+          unoptimized
+          sizes="(max-width: 860px) 100vw, 72vw"
+          className={styles.photo}
+        />
+      )}
 
-      {/* ---------- Background decoration ---------- */}
+      {/* Background Decoration */}
       <svg
         className={styles.decor}
         viewBox="0 0 1667 826"
@@ -377,7 +423,7 @@ export default function Hero() {
         <use href="#kk-paw" x="-22" y="418" width="70" height="70" fill="#E9E3DB" opacity="0.7" />
       </svg>
 
-      {/* ---------- Content ---------- */}
+      {/* Content */}
       <div className={styles.content}>
         <span className={styles.badge}>
           <span className={styles.badgeIcon}>
@@ -385,15 +431,18 @@ export default function Hero() {
               <use href="#kk-paw" width="100" height="100" />
             </svg>
           </span>
-          Healthy Food &nbsp;•&nbsp; Happy Pets
+          {content.badge_text}
         </span>
 
         <h1 id="hero-title" className={styles.title}>
-          <span className={styles.line}>PetLux</span>
           <span className={styles.line}>
-            Pet{" "}
+            {content.title_line_one}
+          </span>
+
+          <span className={styles.line}>
+            {content.title_line_two}{" "}
             <span className={styles.foods}>
-              Foods
+              {content.title_highlight}
               <svg
                 className={styles.swoosh}
                 viewBox="0 0 200 14"
@@ -413,29 +462,40 @@ export default function Hero() {
         </h1>
 
         <p className={styles.tagline}>
-          Nutritious, Delicious &amp; Trusted Pet Food for a Healthier, Happier
-          Life.
+          {content.tagline}
         </p>
 
-        <Link href="/shop" className={styles.cta}>
-          Shop Now
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M5 12h14M13 6l6 6-6 6" />
-          </svg>
-        </Link>
+        {content.button_text && content.button_link && (
+          <Link href={content.button_link} className={styles.cta}>
+            {content.button_text}
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </Link>
+        )}
       </div>
 
-      {/* ---------- Features bar ---------- */}
+      {/* Features */}
       <ul className={styles.features}>
-        {FEATURES.map((f) => (
-          <li key={f.icon} className={styles.feature}>
-            <FeatureIcon type={f.icon} />
+        {content.features?.map((feature, index) => (
+          <li key={index} className={styles.feature}>
+            <FeatureIcon type={feature.icon} />
+
             <span className={styles.featureText}>
-              {f.lines.map((line) => (
-                <span key={line} className={styles.featureLine}>
-                  {line}
-                </span>
-              ))}
+              <span className={styles.featureLine}>
+                {feature.line_one}
+              </span>
+              <span className={styles.featureLine}>
+                {feature.line_two}
+              </span>
             </span>
           </li>
         ))}

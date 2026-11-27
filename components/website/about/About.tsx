@@ -1,65 +1,91 @@
+
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useCmsSection, type AboutContent } from "@/hooks/useCms";
+import { getImageUrl } from "@/lib/imageUrl";
 import styles from "./About.module.css";
 
-const STATS = [
-  { value: "10K+", label: "Happy Pets" },
-  { value: "500+", label: "Premium Products" },
-  { value: "50+", label: "Trusted Brands" },
-  { value: "4.9", label: "Average Rating" },
-];
-
-const TEAM = [
-  {
-    name: "Sarah Johnson",
-    role: "Founder & CEO",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=600&q=80",
-  },
-  {
-    name: "Michael Chen",
-    role: "Head of Operations",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=600&q=80",
-  },
-  {
-    name: "Emily Davis",
-    role: "Veterinary Advisor",
-    image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=600&q=80",
-  },
-];
-
 export default function About() {
+  const { data, isLoading, isError, error } =
+    useCmsSection<AboutContent>("about_section");
+
+  console.log("About CMS API Response:", data);
+  console.log("About CMS Error:", error);
+
+  if (isLoading) {
+    return <div>Loading About page...</div>;
+  }
+
+  if (isError) {
+    return (
+      <div>
+        Failed to load About page.
+        <pre>{String(error)}</pre>
+      </div>
+    );
+  }
+
+  const content = data?.data?.content;
+
+  if (!content) {
+    return (
+      <div>
+        About CMS content not found.
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </div>
+    );
+  }
+
+  if (!content.hero || !content.mission || !content.team) {
+    return (
+      <div>
+        About CMS data structure is incomplete.
+        <pre>{JSON.stringify(content, null, 2)}</pre>
+      </div>
+    );
+  }
+
+  const getSectionImage = (key: string) => {
+    const image = content.images?.find((item) => item.key === key);
+    return image?.src ? getImageUrl(image.src) : null;
+  };
+
+  const heroImage = getSectionImage("hero");
+  const missionImage = getSectionImage("mission");
+
   return (
     <div className={styles.container}>
-      
-      {/* 1. Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <span className={styles.eyebrow}>Our Story</span>
-          <h1 className={styles.heroTitle}>
-            We believe every pet deserves the best.
-          </h1>
+          <span className={styles.eyebrow}>
+            {content.hero.eyebrow}
+          </span>
+          <h1 className={styles.heroTitle}>{content.hero.title}</h1>
           <p className={styles.heroDesc}>
-            At PetLux, we're on a mission to make premium pet care accessible to everyone. 
-            From vet-formulated food to thoughtfully designed essentials, everything we do 
-            is driven by our love for animals.
+            {content.hero.description}
           </p>
         </div>
+
         <div className={styles.heroImage}>
-          <Image
-            src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=1200&q=80"
-            alt="Happy dogs"
-            fill
-            priority
-            className={styles.imageCover}
-          />
+          {heroImage && (
+            <Image
+              src={heroImage}
+              alt="About PetLux"
+              fill
+              priority
+              unoptimized
+              className={styles.imageCover}
+            />
+          )}
         </div>
       </section>
 
-      {/* 2. Stats Section */}
       <section className={styles.stats}>
         <div className={styles.statsInner}>
-          {STATS.map((stat) => (
-            <div key={stat.label} className={styles.statItem}>
+          {content.stats?.map((stat, index) => (
+            <div key={index} className={styles.statItem}>
               <span className={styles.statValue}>{stat.value}</span>
               <span className={styles.statLabel}>{stat.label}</span>
             </div>
@@ -67,57 +93,70 @@ export default function About() {
         </div>
       </section>
 
-      {/* 3. Mission Section */}
       <section className={styles.mission}>
         <div className={styles.missionContent}>
-          <span className={styles.eyebrow}>Our Mission</span>
+          <span className={styles.eyebrow}>
+            {content.mission.eyebrow}
+          </span>
           <h2 className={styles.sectionTitle}>
-            More than just a pet store.
+            {content.mission.title}
           </h2>
           <p className={styles.desc}>
-            We started PetLux because we were frustrated with the lack of transparency 
-            in the pet products industry. Too many brands hide behind vague ingredient lists, 
-            use cheap fillers, and prioritize profit over the health of our furry friends. 
-            We knew there had to be a better way.
+            {content.mission.description_one}
           </p>
           <p className={styles.desc}>
-            That's why every single product on our shelves is carefully vetted by our 
-            in-house veterinary team. We dig deep into sourcing, manufacturing processes, 
-            and nutritional value. We only stock what we would confidently feed our own pets — 
-            nothing less. Our promise is simple: honest ingredients, transparent pricing, 
-            and exceptional quality that you can trust.
+            {content.mission.description_two}
           </p>
-          <Link href="/shop" className={styles.primaryBtn}>
-            Shop Our Collection
-          </Link>
+
+          {content.mission.button_text &&
+            content.mission.button_link && (
+              <Link
+                href={content.mission.button_link}
+                className={styles.primaryBtn}
+              >
+                {content.mission.button_text}
+              </Link>
+            )}
         </div>
+
         <div className={styles.missionImage}>
-          <Image
-            src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=800&q=80"
-            alt="Vet examining pet"
-            fill
-            className={styles.imageCover}
-          />
+          {missionImage && (
+            <Image
+              src={missionImage}
+              alt="PetLux mission"
+              fill
+              unoptimized
+              className={styles.imageCover}
+            />
+          )}
         </div>
       </section>
 
-      {/* 4. Team Section */}
       <section className={styles.team}>
         <div className={styles.teamHeader}>
-          <span className={styles.eyebrow}>Meet the Team</span>
-          <h2 className={styles.sectionTitle}>The people behind PetLux</h2>
+          <span className={styles.eyebrow}>
+            {content.team.eyebrow}
+          </span>
+          <h2 className={styles.sectionTitle}>
+            {content.team.title}
+          </h2>
         </div>
+
         <div className={styles.teamGrid}>
-          {TEAM.map((member) => (
-            <div key={member.name} className={styles.teamCard}>
+          {content.team.members?.map((member, index) => (
+            <div key={index} className={styles.teamCard}>
               <div className={styles.teamImageWrapper}>
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  className={styles.imageCover}
-                />
+                {member.image && (
+                  <Image
+                    src={getImageUrl(member.image)}
+                    alt={member.name}
+                    fill
+                    unoptimized
+                    className={styles.imageCover}
+                  />
+                )}
               </div>
+
               <div className={styles.teamInfo}>
                 <h3 className={styles.teamName}>{member.name}</h3>
                 <span className={styles.teamRole}>{member.role}</span>
@@ -126,7 +165,6 @@ export default function About() {
           ))}
         </div>
       </section>
-
     </div>
   );
 }

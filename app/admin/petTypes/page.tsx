@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { PET_TYPES } from "@/data/pettype";
 import PetTypesTable from "@/components/admin/petTypes/PetTypesTable";
 import styles from "./PetTypesPage.module.css";
 
